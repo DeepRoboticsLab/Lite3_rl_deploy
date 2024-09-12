@@ -1,0 +1,9 @@
+build
+*.zip
+.vscode
+*.txt
+
+data/*
+policy/*
+third_party/*
+!policy/model_13000.pt

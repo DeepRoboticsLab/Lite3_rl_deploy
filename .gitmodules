@@ -1,0 +1,13 @@
+[submodule "third_party/eigen"]
+	path = third_party/eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "third_party/URDF_model"]
+	path = third_party/URDF_model
+	url = https://github.com/DeepRoboticsLab/URDF_model.git
+[submodule "third_party/gamepad"]
+	path = third_party/gamepad
+	url = https://github.com/DeepRoboticsLab/gamepad.git
+[submodule "third_party/Lite3_MotionSDK"]
+	path = third_party/Lite3_MotionSDK
+	url = https://github.com/DeepRoboticsLab/Lite3_MotionSDK.git
+	branch = add_python
