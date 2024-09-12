@@ -3,7 +3,7 @@
 ## 下载编译
 
 ```bash
-git clone --recurse-submodules https://github.com/DeepRoboticsLab/rl_deploy.git
+git clone --recurse-submodules https://github.com/DeepRoboticsLab/deeprobotics_rl_deploy.git
 mkdir build && cd build
 cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=off -DSEND_REMOTE=OFF 
 make -j4
