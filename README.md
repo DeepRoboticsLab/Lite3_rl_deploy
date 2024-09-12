@@ -3,9 +3,9 @@
 ## 下载编译
 
 ```bash
-git clone --recurse-submodules xxxxxxxxxxxxx
+git clone --recurse-submodules https://github.com/DeepRoboticsLab/rl_deploy.git
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=off -DSEND_REMOTE=OFF 
+cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=off -DSEND_REMOTE=OFF 
 make -j4
 ```
 
@@ -14,16 +14,16 @@ make -j4
 1.Lite3上的运动主板是arm架构，如果编译在狗上运行需要安装交叉编译工具
 
 ```bash
-sudo apt-get install xxxxxx
+sudo apt-get install gcc-aarch64-linux-gnu gcc-aarch64-linux-g++
 ```
 
-2.运行RL训练出的策略文件需要链接libtorch库，需要根据运行主机的架构和配置自行前往官网(https://pytorch.org/)下载或编译，因为libtorch程序比较大，不在远程仓库中直接添加。如果有需要arm架构基于CPU(Lite3运动主机架构)的libtorch库，可以联系xxx获得。
+2.运行RL训练出的策略文件需要链接libtorch库，需要根据运行主机的架构和配置自行前往官网(https://pytorch.org/)下载或编译，因为libtorch程序比较大，不在远程仓库中直接添加。如果有需要arm架构基于CPU(Lite3运动主机架构)的libtorch库，可以在issues中留言。
 
 <img src="./doc/libtorch.png" alt="a" style="zoom:75%;" />
 
 3.目前示例给出的远程遥控是按照手柄输入来的，建议提前根据https://github.com/DeepRoboticsLab/gamepad.git中的介绍提前测试一下手柄的通讯是否正常。
 
-4.示例程序中给出了基于RaiSim平台的仿真验证程序，有兴趣的同学可以前往https://raisim.com/index.html了解接口细节和申请licence继续后续的仿真。
+4.示例程序中给出了基于pybullet平台的仿真验证程序，有兴趣的同学可以前往https://pybullet.org/wordpress/了解细节。
 
 
 
