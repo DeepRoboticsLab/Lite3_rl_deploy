@@ -16,7 +16,7 @@ import threading
 import time
 
 urdfPath = {
-"lite3"    : "/home/ysc/ysc_code/rl_deploy/third_party/URDF_model/lite3_urdf/lite3_pybullet/Lite3/urdf/Lite3.urdf",
+"lite3"    : "../../../third_party/URDF_model/lite3_urdf/lite3_pybullet/Lite3/urdf/Lite3.urdf",
 }
 
 class PyBulletSimulation:
