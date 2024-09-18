@@ -14,7 +14,7 @@ make -j4
 1.Lite3上的运动主板是arm架构，如果编译在狗上运行需要安装交叉编译工具
 
 ```bash
-sudo apt-get install gcc-aarch64-linux-gnu gcc-aarch64-linux-g++
+sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 ```
 
 2.运行RL训练出的策略文件需要链接libtorch库，需要根据运行主机的架构和配置自行前往官网(https://pytorch.org/)下载或编译，因为libtorch程序比较大，不在远程仓库中直接添加。如果有需要arm架构基于CPU(Lite3运动主机架构)的libtorch库，可以在issues中留言。
