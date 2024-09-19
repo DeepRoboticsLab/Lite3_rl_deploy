@@ -1,7 +1,7 @@
 build
 *.zip
 .vscode
-*.txt
+
 
 data/*
 policy/*
