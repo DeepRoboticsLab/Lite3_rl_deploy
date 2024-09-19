@@ -77,8 +77,9 @@ class PyBulletSimulation:
                                         controlMode=p.TORQUE_CONTROL, 
                                         forces=self.inputTorque.reshape(self.dofNum).tolist())
             p.stepSimulation()
-            endTime = time.time()
-            time.sleep(0.001-(endTime-startTime))
+            costTime = time.time() - startTime
+            if costTime < 0.001:
+                time.sleep(0.001-costTime)
 
 
     def getImuMessage(self):
