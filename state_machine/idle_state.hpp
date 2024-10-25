@@ -20,7 +20,7 @@ private:
     bool first_enter_flag_ = true;
     VecXf joint_pos_, joint_vel_, joint_tau_;
     Vec3f rpy_, acc_, omg_;
-    float enter_state_time_ = 10000.;
+    double enter_state_time_ = -10000.;
 
     void GetProprioceptiveData(){
         joint_pos_ = ri_ptr_->GetJointPosition();

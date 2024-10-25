@@ -65,7 +65,7 @@ public:
 
     ~RaisimInterface(){}
 
-    virtual float GetInterfaceTimeStamp(){
+    virtual double GetInterfaceTimeStamp(){
         return run_time_;
     }
     virtual VecXf GetJointPosition() {

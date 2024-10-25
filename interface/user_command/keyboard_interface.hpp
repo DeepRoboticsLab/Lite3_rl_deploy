@@ -73,7 +73,7 @@ public:
             if(read(STDIN_FILENO, &input, 1) != -1){
                 double current_time = GetCurrentTimeStamp();
                 std::cout << "input: " << input << std::endl;
-                if(input == 'e'){
+                if(input == 'r'){
                     usr_cmd_.target_mode = int(RobotMotionState::JointDamping);
                 }
                 // usr_cmd_.down_shift = false;
@@ -108,11 +108,11 @@ public:
                             side_time_record = current_time;
                         }
                         
-                        if(input=='j') {
+                        if(input=='q') {
                             usr_cmd_.turnning_vel_scale+=AXIS_STEP;
                             turnning_time_record = current_time;
                         }
-                        else if(input=='l') {
+                        else if(input=='e') {
                             usr_cmd_.turnning_vel_scale-=AXIS_STEP;
                             turnning_time_record = current_time;
                         }

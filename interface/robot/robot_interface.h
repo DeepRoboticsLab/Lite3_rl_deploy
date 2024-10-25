@@ -48,9 +48,9 @@ public:
 
     /**
      * @brief Get the time stamp of the robot
-     * @return float        time stamp
+     * @return double        time stamp
      */
-    virtual float GetInterfaceTimeStamp() = 0;
+    virtual double GetInterfaceTimeStamp() = 0;
 
     /**
      * @brief Get the joint position of the robot

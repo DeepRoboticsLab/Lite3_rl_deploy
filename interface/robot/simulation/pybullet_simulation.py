@@ -31,7 +31,8 @@ class PyBulletSimulation:
         p.connect(p.GUI)
         p.setGravity(0, 0, -9.81)
         p.setAdditionalSearchPath(pd.getDataPath()) # 设置pybullet_data的文件路径
-        p.loadURDF("plane.urdf") 
+        self.terrain=p.loadURDF("plane.urdf") 
+        p.changeDynamics(self.terrain, -1, lateralFriction=1)
         zInit = 0.45 
         startPos = [0.0, 0, zInit]
         urdfFlags = p.URDF_USE_SELF_COLLISION_EXCLUDE_PARENT | p.URDF_USE_INERTIA_FROM_FILE | p.URDF_USE_SELF_COLLISION_EXCLUDE_ALL_PARENTS
@@ -39,13 +40,16 @@ class PyBulletSimulation:
         
         self.numOfJoints = p.getNumJoints(self.robot)
         self.jointIdxList = []
-        
+        footNumList=[3, 7, 11, 15]
+        p.changeDynamics(self.robot, -1, linearDamping=0.0, angularDamping=0.0)
         for j in range(self.numOfJoints):
             jointInfo = p.getJointInfo(self.robot, j)
             jointName = jointInfo[1].decode("UTF-8")
             lower = jointInfo[8]
             upper = jointInfo[9]
-            
+            p.changeDynamics(self.robot, j, linearDamping=0.0, angularDamping=0.0)
+            if j in footNumList:
+                p.changeDynamics(self.robot, j, lateralFriction=0.8, spinningFriction=0.03*0.8)
             if jointInfo[2]==p.JOINT_REVOLUTE:
                 self.jointIdxList.append(j)
                 p.setJointMotorControl2(self.robot, j, p.VELOCITY_CONTROL, force=0)
@@ -117,7 +121,7 @@ class PyBulletSimulation:
         jointVel = self.jointVel.flatten()
         jointTau = self.jointTau.flatten()
         combineData = np.concatenate((timestamp, rpy, acc, omg, jointPos, jointVel, jointTau))
-        formatString = f'{len(combineData)}f'
+        formatString = f'1d{len(combineData)-1}f'
         data = struct.pack(formatString, *combineData)
         # self.comm_lock.acquire()
         if self.server:

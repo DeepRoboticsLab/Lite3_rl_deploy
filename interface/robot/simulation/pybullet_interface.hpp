@@ -25,7 +25,7 @@
 namespace interface{
     class PybulletInterface : public RobotInterface{
         private:
-            float run_time_;
+            double run_time_=0;
             Vec3f omega_body_, rpy_, acc_;
             VecXf joint_pos_, joint_vel_, joint_tau_;
             bool start_thread_flag_ = false;
@@ -40,7 +40,7 @@ namespace interface{
 
             std::cout << robot_name_ << " is using pybullet simulation \n";
         }
-        virtual float GetInterfaceTimeStamp(){
+        virtual double GetInterfaceTimeStamp(){
             return run_time_;
         }
         virtual VecXf GetJointPosition() {
@@ -130,7 +130,7 @@ namespace interface{
 
             // 接收数据
             char buffer[1024]={0};
-            float data[46]={0};
+            float data[47]={0};
             struct sockaddr_in clientAddr;
             socklen_t clientAddrLen = sizeof(clientAddr);
 
@@ -151,16 +151,16 @@ namespace interface{
                 }
 
                 std::memcpy(data, buffer, 46*sizeof(float));
-                run_time_ = data[0];
-                rpy_ = Eigen::Map<Vec3f>(data+1, 3); 
-                acc_ = Eigen::Map<Vec3f>(data+4, 3); 
-                omega_body_ = Eigen::Map<Vec3f>(data+7, 3); 
-                joint_pos_ = Eigen::Map<VecXf>(data+10, 12); 
-                joint_vel_ = Eigen::Map<VecXf>(data+22, 12); 
-                joint_tau_ = Eigen::Map<VecXf>(data+34, 12); 
+                run_time_ = ((double*)(data))[0];
+                rpy_ = Eigen::Map<Vec3f>(data+2, 3); 
+                acc_ = Eigen::Map<Vec3f>(data+5, 3); 
+                omega_body_ = Eigen::Map<Vec3f>(data+8, 3); 
+                joint_pos_ = Eigen::Map<VecXf>(data+11, 12); 
+                joint_vel_ = Eigen::Map<VecXf>(data+23, 12); 
+                joint_tau_ = Eigen::Map<VecXf>(data+35, 12); 
 
                 // 打印接收到的数据
-                // std::cout << "Received data: " << joint_pos_.transpose() << std::endl;
+                // std::cout << "Received data: " << run_time_ << std::endl;
 
             }
 

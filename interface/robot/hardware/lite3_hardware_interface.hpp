@@ -44,7 +44,7 @@ public:
         }
     }
 
-    virtual float GetInterfaceTimeStamp(){
+    virtual double GetInterfaceTimeStamp(){
         return robot_data_->tick*0.001;
     }
     virtual VecXf GetJointPosition() {

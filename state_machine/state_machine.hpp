@@ -103,8 +103,8 @@ public:
         const std::string activation_key = "~/raisim/activation.raisim";
         std::string urdf_path = "";
         // uc_ptr_ = std::make_shared<SkydroidGamepadInterface>(12121);
-        // uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
-        uc_ptr_ = std::make_shared<KeyboardInterface>();
+        uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
+        // uc_ptr_ = std::make_shared<KeyboardInterface>();
 
         if(robot_type == RobotType::Lite3){
             urdf_path = GetAbsPath()+"/../third_party/URDF_model/lite3_urdf/Lite3/urdf/Lite3.urdf";
