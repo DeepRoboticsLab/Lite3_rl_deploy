@@ -104,7 +104,7 @@ class PyBulletSimulation:
         jointStates = p.getJointStates(self.robot, self.jointIdxList)
         self.jointPos = np.array([jointStates[i][0] for i in range(self.dofNum)]).reshape(self.dofNum, 1)
         self.jointVel = np.array([jointStates[i][1] for i in range(self.dofNum)]).reshape(self.dofNum, 1)
-        self.jointTau = np.array([jointStates[i][3] for i in range(self.dofNum)]).reshape(self.dofNum, 1)
+        self.jointTau = np.array(self.inputTorque).reshape(self.dofNum, 1)
 
     def setJointCmd(self, kp, targetPos, kd, targetVel, tau):
         self.inputTorque = np.multiply(kp, (targetPos-self.jointPos)) \

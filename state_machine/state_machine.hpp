@@ -103,8 +103,8 @@ public:
         const std::string activation_key = "~/raisim/activation.raisim";
         std::string urdf_path = "";
         // uc_ptr_ = std::make_shared<SkydroidGamepadInterface>(12121);
-        uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
-        // uc_ptr_ = std::make_shared<KeyboardInterface>();
+        // uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
+        uc_ptr_ = std::make_shared<KeyboardInterface>();
 
         if(robot_type == RobotType::Lite3){
             urdf_path = GetAbsPath()+"/../third_party/URDF_model/lite3_urdf/Lite3/urdf/Lite3.urdf";
@@ -125,7 +125,7 @@ public:
         data_ptr->ri_ptr = ri_ptr_;
         data_ptr->uc_ptr = uc_ptr_;
         data_ptr->cp_ptr = cp_ptr_;
-        ds_ptr_ = std::make_shared<DataStreaming>(false, false);
+        ds_ptr_ = std::make_shared<DataStreaming>(false, true);
         data_ptr->ds_ptr = ds_ptr_;
 
         idle_controller_ = std::make_shared<IdleState>(robot_type, "idle_state", data_ptr);
