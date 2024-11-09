@@ -12,6 +12,7 @@ namespace types{
         WaitingForStand = 0,
         StandingUp      = 1,
         JointDamping    = 2,
+        ForceStand      = 3,
 
         RLControlMode   = 6,
     };
@@ -21,6 +22,7 @@ namespace types{
         kIdle         = 0,
         kStandUp      = 1,
         kJointDamping = 2,
+        kForceStand   = 3,
 
         kRLControl    = 6,
     };

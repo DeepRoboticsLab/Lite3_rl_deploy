@@ -16,6 +16,7 @@
 #include "standup_state.hpp"
 #include "joint_damping_state.hpp"
 #include "rl_control_state.hpp"
+#include "force_stand_state.hpp"
 
 #include "skydroid_gamepad_interface.hpp"
 #include "retroid_gamepad_interface.hpp"
@@ -36,6 +37,7 @@ private:
     std::shared_ptr<StateBase> standup_controller_;
     std::shared_ptr<StateBase> rl_controller_;
     std::shared_ptr<StateBase> joint_damping_controller_;
+    std::shared_ptr<StateBase> force_stand_controller_;
 
     StateName current_state_name_, next_state_name_;
 
@@ -92,6 +94,9 @@ private:
             case StateName::kJointDamping:{
                 return joint_damping_controller_;
             }
+            case StateName::kForceStand:{
+                return force_stand_controller_;
+            }
             default:{
                 std::cerr << "error state name" << std::endl;
             }
@@ -103,8 +108,8 @@ public:
         const std::string activation_key = "~/raisim/activation.raisim";
         std::string urdf_path = "";
         // uc_ptr_ = std::make_shared<SkydroidGamepadInterface>(12121);
-        // uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
-        uc_ptr_ = std::make_shared<KeyboardInterface>();
+        uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
+        // uc_ptr_ = std::make_shared<KeyboardInterface>();
 
         if(robot_type == RobotType::Lite3){
             urdf_path = GetAbsPath()+"/../third_party/URDF_model/lite3_urdf/Lite3/urdf/Lite3.urdf";
@@ -125,13 +130,14 @@ public:
         data_ptr->ri_ptr = ri_ptr_;
         data_ptr->uc_ptr = uc_ptr_;
         data_ptr->cp_ptr = cp_ptr_;
-        ds_ptr_ = std::make_shared<DataStreaming>(false, true);
+        ds_ptr_ = std::make_shared<DataStreaming>(false, false);
         data_ptr->ds_ptr = ds_ptr_;
 
         idle_controller_ = std::make_shared<IdleState>(robot_type, "idle_state", data_ptr);
         standup_controller_ = std::make_shared<StandUpState>(robot_type, "standup_state", data_ptr);
         rl_controller_ = std::make_shared<RLControlState>(robot_type, "rl_control", data_ptr);
         joint_damping_controller_ = std::make_shared<JointDampingState>(robot_type, "joint_damping", data_ptr);
+        force_stand_controller_ = std::make_shared<ForceStandState>(robot_type, "force_stand", data_ptr);
 
         current_controller_ = idle_controller_;
         current_state_name_ = kIdle;

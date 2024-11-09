@@ -141,6 +141,8 @@ public:
         }else{
             if(uc_ptr_->GetUserCommand().target_mode == int(RobotMotionState::RLControlMode)){
                 return StateName::kRLControl;
+            }else if(uc_ptr_->GetUserCommand().target_mode == int(RobotMotionState::ForceStand)){
+                return StateName::kForceStand;
             }
         }
         return StateName::kStandUp;
