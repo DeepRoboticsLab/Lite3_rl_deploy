@@ -18,7 +18,6 @@ class ForceStandState : public StateBase{
 private:
     // VecXf joint_pos_, joint_vel_, joint_tau_;
     Vec3f rpy_, acc_, omg_;
-
     VecXf init_joint_pos_, init_joint_vel_, current_joint_pos_, current_joint_vel_;
     Mat3f rot_mat_;
     Mat3f fl_jacobian_, fr_jacobian_, hl_jacobian_, hr_jacobian_;
@@ -28,20 +27,17 @@ private:
     Vec3f fl_vel_global_, fr_vel_global_, hl_vel_global_, hr_vel_global_;
     Vec3f com_pos_global_, com_vel_global_;
     Vec3f init_com_pos_, init_com_vel_;
-    Vec3f fl_contact_pos_, fr_contact_pos_, hl_contact_pos_, hr_contact_pos_;
+
     float init_yaw_;
     Vec3f init_rpy_;
     Mat3f init_rot_mat_;
     double time_stamp_record_, run_time_;
     Eigen::Matrix<float, 12, 5> joint_cmd_;
+    float cmd_roll_, cmd_pitch_, cmd_yaw_, cmd_height_;
+    float input_roll_ = 0, input_pitch_ = 0, input_yaw_ = 0, input_height_ = 0;
+    float input_x_ = 0, input_y_ = 0;
 
-    Mat3f CrossVector(const Vec3f& r){
-        Mat3f cm;
-        cm << 0.f, -r(2), r(1),
-            r(2), 0.f, -r(0),
-            -r(1), r(0), 0.f;
-        return cm;
-    }
+
 
     Vec3f LogRot(Mat3f rot){
         float theta;
@@ -56,25 +52,6 @@ private:
         return omega;
     }
 
-    float GetCubicSplinePos(float x0, float v0, float xf, float vf, float t, float T){
-        if(t >= T) return xf;
-        float a, b, c, d;
-        d = x0;
-        c = v0;
-        a = (vf*T - 2*xf + v0*T + 2*x0) / pow(T, 3);
-        b = (3*xf - vf*T - 2*v0*T - 3*x0) / pow(T, 2);
-        return a*pow(t, 3)+b*pow(t, 2)+c*t+d;
-    }
-
-    float GetCubicSplineVel(float x0, float v0, float xf, float vf, float t, float T){
-        if(t >= T) return 0;
-        float a, b, c;
-        c = v0;
-        a = (vf*T - 2*xf + v0*T + 2*x0) / pow(T, 3);
-        b = (3*xf - vf*T - 2*v0*T - 3*x0) / pow(T, 2);
-        return 3.*a*pow(t, 2) + 2.*b*t + c;
-    }
-
     void GetProprioceptiveData(){
         run_time_ = ri_ptr_->GetInterfaceTimeStamp();
         current_joint_pos_ = ri_ptr_->GetJointPosition();
@@ -85,6 +62,40 @@ private:
         omg_ = ri_ptr_->GetImuOmega();
         rot_mat_ = RpyToRm(rpy_);
         GetLegPosLocalAndGlobal();
+        cmd_pitch_ = uc_ptr_->GetUserCommand().forward_vel_scale*Deg2Rad(20.);
+        cmd_yaw_ = uc_ptr_->GetUserCommand().side_vel_scale*Deg2Rad(15.);
+        cmd_roll_ = uc_ptr_->GetUserCommand().turnning_vel_scale*Deg2Rad(10.);
+        cmd_height_ = uc_ptr_->GetUserCommand().reserved_scale*0.1;
+        cmd_height_ = LimitNumber(cmd_height_, -0.08, 0.05);
+        if(fabs(cmd_pitch_) > Deg2Rad(10.) || fabs(cmd_yaw_) > Deg2Rad(10.)){
+            cmd_height_ = LimitNumber(cmd_height_, -0.08, -0.05);
+        }
+
+        float delta = 0;
+
+        delta = cmd_roll_ - input_roll_;
+        delta = LimitNumber(delta, Deg2Rad(0.01));
+        input_roll_ = input_roll_ + delta;
+
+        delta = cmd_pitch_ - input_pitch_;
+        delta = LimitNumber(delta, Deg2Rad(0.02));
+        input_pitch_ = input_pitch_ + delta;
+
+        delta = 0. - input_x_;
+        delta = LimitNumber(delta, 3e-5);
+        input_x_ = input_x_ + delta;
+
+        delta = 0. - input_y_;
+        delta = LimitNumber(delta, 3e-5);
+        input_y_ = input_y_ + delta;
+
+        delta = init_rpy_(2) + cmd_yaw_ - input_yaw_;
+        delta = LimitNumber(delta, Deg2Rad(0.02));
+        input_yaw_ = input_yaw_ + delta;
+
+        delta = cp_ptr_->stand_height_ + cmd_height_ - input_height_;
+        delta = LimitNumber(delta, 5e-5);
+        input_height_ = input_height_ + delta;
     }
 
     void RecordJointData(){
@@ -95,12 +106,13 @@ private:
         time_stamp_record_ = run_time_;
         init_rot_mat_ = rot_mat_;
         init_rpy_ = rpy_;
-        // init_yaw_ = rpy_(2);
 
-        fl_contact_pos_ = com_pos_global_+fl_pos_global_;
-        fr_contact_pos_ = com_pos_global_+fr_pos_global_;
-        hl_contact_pos_ = com_pos_global_+hl_pos_global_;
-        hr_contact_pos_ = com_pos_global_+hr_pos_global_;
+        input_roll_ = rpy_(0);
+        input_pitch_ = rpy_(1);
+        input_x_ = init_com_pos_(0);
+        input_y_ = init_com_pos_(1);
+        input_yaw_ = rpy_(2);
+        input_height_ = init_com_pos_(2);
     }
 
     void GetLegPosLocalAndGlobal(){
@@ -191,29 +203,13 @@ private:
     }
 
     void VirtualForceDistribution(){
-        // Mat3f target_rot_mat = RpyToRm(Vec3f(0, 0, init_yaw_));
-        Vec3f target_base_pos = Vec3f(0, 0, 0.35);
-        // Vec3f so3_input = target_rot_mat*init_rot_mat_.transpose();
-        Vec3f target_base_rpy = Vec3f(0, 0, init_rpy_(2));
+        Vec3f target_base_pos = Vec3f(input_x_, input_y_, input_height_);
+        Vec3f target_base_rpy = Vec3f(input_roll_, input_pitch_, input_yaw_);
         Mat3f target_base_rot = RpyToRm(target_base_rpy);
-        const float stand_duration = 2.0;
-        Vec3f target_com_pos, target_com_vel, target_com_omg;
-        Mat3f target_com_rot;
-        Vec3f pos_kp(100, 100, 150), ori_kp(100, 100, 100);
-        Vec3f pos_kd(5, 5, 5), ori_kd(5, 5, 5);
-        for(int i=0;i<3;++i){
-            target_com_pos(i)= GetCubicSplinePos(init_com_pos_(i), init_com_vel_(i), target_base_pos(i), 0, 
-                    run_time_-time_stamp_record_, stand_duration);
-            target_com_vel(i) = GetCubicSplineVel(init_com_pos_(i), init_com_vel_(i), target_base_pos(i), 0, 
-                    run_time_-time_stamp_record_, stand_duration);
-        }
-        target_com_omg = LogRot(init_rot_mat_.transpose()*target_base_rot);
-        if(run_time_-time_stamp_record_ >= stand_duration){
-            target_com_omg.setZero();
-            target_com_rot = target_base_rot;
-        }
-        Vec3f force = pos_kp.cwiseProduct(target_com_pos-com_pos_global_)
-                    + pos_kd.cwiseProduct(target_com_vel-com_vel_global_) + Vec3f(0, 0, 100);
+        Vec3f pos_kp(400, 400, 3500), ori_kp(100, 150, 150);
+        Vec3f pos_kd(20, 20, 50), ori_kd(5, 8, 10);
+        Vec3f force = pos_kp.cwiseProduct(target_base_pos-com_pos_global_)
+                    + pos_kd.cwiseProduct(Vec3f::Zero()-com_vel_global_) + Vec3f(0, 0, 100);
         Vec3f angle_diff = target_base_rpy - rpy_;
         angle_diff = LogRot(target_base_rot*rot_mat_.transpose());
         Vec3f torque = ori_kp.cwiseProduct(angle_diff)
@@ -229,8 +225,8 @@ private:
         b << force, torque;
 
         F_solution = A.transpose()*(A*A.transpose()).inverse()*b;
-        std::cout << "F_solution: " << F_solution.transpose() << std::endl;
-        std::cout << "b:          " << b.transpose() << std::endl;
+        // std::cout << "F_solution: " << F_solution.transpose() << std::endl;
+        // std::cout << "b:          " << b.transpose() << std::endl;
         // std::cout << "b_inv:      " << (A*F_solution).transpose() << std::endl;
         for(int leg=0;leg<4;++leg){
             Mat3f leg_jacobian = GetLegJacobian(current_joint_pos_.segment(3*leg, 3), leg);
@@ -263,7 +259,6 @@ public:
     }
     virtual void Run() {
         GetProprioceptiveData();
-
         joint_cmd_.setZero();
         VirtualForceDistribution();
         ri_ptr_->SetJointCommand(joint_cmd_);
@@ -278,9 +273,6 @@ public:
         return false;
     }
     virtual StateName GetNextStateName() {
-
-        
-        // if(uc_ptr_->GetUserCommand().target_mode == int(RobotMotionState::StandingUp)) return StateName::kStandUp;
         return StateName::kForceStand;
     }
 };

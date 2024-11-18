@@ -77,6 +77,7 @@ void RetroidGamepadInterface::TransformRetroidToUserCommand(){
         usr_cmd_.forward_vel_scale = rt_keys_.left_axis_y;
         usr_cmd_.side_vel_scale = -rt_keys_.left_axis_x;
         usr_cmd_.turnning_vel_scale = -rt_keys_.right_axis_x;
+        usr_cmd_.reserved_scale = rt_keys_.right_axis_y;
         if (!IsKeysEqual(rt_keys_, rt_keys_record_)) {
             switch (msfb_.current_state){
             case RobotMotionState::WaitingForStand:

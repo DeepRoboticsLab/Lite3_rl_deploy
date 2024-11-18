@@ -68,6 +68,7 @@ namespace types{
         float forward_vel_scale;
         float side_vel_scale;
         float turnning_vel_scale;
+        float reserved_scale;
     };
 
     struct MotionStateFeedback{

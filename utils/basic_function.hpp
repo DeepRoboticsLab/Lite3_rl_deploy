@@ -16,6 +16,42 @@
 using namespace types;
 
 namespace functions{
+
+inline float Deg2Rad(float deg){
+    return deg /180.f * M_PI;
+}
+
+inline float Rad2Deg(float rad){
+    return rad / M_PI * 180.;
+}
+
+inline Mat3f CrossVector(const Vec3f& r){
+    Mat3f cm;
+    cm << 0.f, -r(2), r(1),
+        r(2), 0.f, -r(0),
+        -r(1), r(0), 0.f;
+    return cm;
+}
+
+inline float GetCubicSplinePos(float x0, float v0, float xf, float vf, float t, float T){
+    if(t >= T) return xf;
+    float a, b, c, d;
+    d = x0;
+    c = v0;
+    a = (vf*T - 2*xf + v0*T + 2*x0) / pow(T, 3);
+    b = (3*xf - vf*T - 2*v0*T - 3*x0) / pow(T, 2);
+    return a*pow(t, 3)+b*pow(t, 2)+c*t+d;
+}
+
+inline float GetCubicSplineVel(float x0, float v0, float xf, float vf, float t, float T){
+    if(t >= T) return 0;
+    float a, b, c;
+    c = v0;
+    a = (vf*T - 2*xf + v0*T + 2*x0) / pow(T, 3);
+    b = (3*xf - vf*T - 2*v0*T - 3*x0) / pow(T, 2);
+    return 3.*a*pow(t, 2) + 2.*b*t + c;
+}
+   
 inline float LimitNumber(float data, float limit){
     limit = fabs(limit);
     if(data > limit) data = limit;

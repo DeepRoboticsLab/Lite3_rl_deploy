@@ -33,24 +33,6 @@ private:
         time_stamp_record_ = run_time_;
     }
 
-    float GetCubicSplinePos(float x0, float v0, float xf, float vf, float t, float T){
-        if(t >= T) return xf;
-        float a, b, c, d;
-        d = x0;
-        c = v0;
-        a = (vf*T - 2*xf + v0*T + 2*x0) / pow(T, 3);
-        b = (3*xf - vf*T - 2*v0*T - 3*x0) / pow(T, 2);
-        return a*pow(t, 3)+b*pow(t, 2)+c*t+d;
-    }
-    float GetCubicSplineVel(float x0, float v0, float xf, float vf, float t, float T){
-        if(t >= T) return 0;
-        float a, b, c;
-        c = v0;
-        a = (vf*T - 2*xf + v0*T + 2*x0) / pow(T, 3);
-        b = (3*xf - vf*T - 2*v0*T - 3*x0) / pow(T, 2);
-        return 3.*a*pow(t, 2) + 2.*b*t + c;
-    }
-
     float GetHipYPosByHeight(float h){
         float l1 = cp_ptr_->thigh_len_;
         float l2 = cp_ptr_->shank_len_;
