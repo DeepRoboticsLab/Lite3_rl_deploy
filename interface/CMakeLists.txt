@@ -22,5 +22,5 @@ set(LITE3_MOTION_SDK_PATH "${THIRD_PARTY}/Lite3_MotionSDK")
 include_directories(${LITE3_MOTION_SDK_PATH}/include)
 file(GLOB_RECURSE LITE3_MOTION_SDK_SRC "${LITE3_MOTION_SDK_PATH}/src/*.cpp")
 
-add_library(interface STATIC ${USER_COMMAND_SRC} ${GAMEPAD_SDK_SRC} ${LITE3_MOTION_SDK_SRC} ${ECAN_SDK_SRC})
+add_library(interface STATIC ${USER_COMMAND_SRC} ${GAMEPAD_SDK_SRC} ${LITE3_MOTION_SDK_SRC})
 target_link_libraries(interface PUBLIC -lpthread -lm -lrt -ldl -lstdc++)
