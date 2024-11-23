@@ -21,9 +21,9 @@ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
 <img src="./doc/libtorch.png" alt="a" style="zoom:75%;" />
 
-3.目前示例给出的远程遥控是按照手柄输入来的，建议提前根据https://github.com/DeepRoboticsLab/gamepad.git中的介绍提前测试一下手柄的通讯是否正常。
+3.目前示例给出的远程遥控是按照手柄输入来的，建议提前根据https://github.com/DeepRoboticsLab/gamepad.git 中的介绍提前测试一下手柄的通讯是否正常。
 
-4.示例程序中给出了基于pybullet平台的仿真验证程序，有兴趣的同学可以前往https://pybullet.org/wordpress/了解细节。
+4.示例程序中给出了基于pybullet平台的仿真验证程序，有兴趣的同学可以前往https://pybullet.org/wordpress/ 了解细节。
 
 
 

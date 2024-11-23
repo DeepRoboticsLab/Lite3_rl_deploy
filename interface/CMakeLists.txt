@@ -22,18 +22,5 @@ set(LITE3_MOTION_SDK_PATH "${THIRD_PARTY}/Lite3_MotionSDK")
 include_directories(${LITE3_MOTION_SDK_PATH}/include)
 file(GLOB_RECURSE LITE3_MOTION_SDK_SRC "${LITE3_MOTION_SDK_PATH}/src/*.cpp")
 
-set(ECAN_SDK_PATH "${THIRD_PARTY}/ecan_master")
-include_directories(${ECAN_SDK_PATH})
-file(GLOB_RECURSE ECAN_SDK_SRC "${ECAN_SDK_PATH}/motor/*.cpp" "${ECAN_SDK_PATH}/network/*.cpp")
-
 add_library(interface STATIC ${USER_COMMAND_SRC} ${GAMEPAD_SDK_SRC} ${LITE3_MOTION_SDK_SRC} ${ECAN_SDK_SRC})
 target_link_libraries(interface PUBLIC -lpthread -lm -lrt -ldl -lstdc++)
-
-
-
-# add_library(user_command SHARED ${USER_COMMAND_SRC})
-# target_link_libraries(user_command gamepad_sdk)
-
-# add_executable(test ./test.cpp)
-# target_link_libraries(test  simulation gamepad_sdk)
-# add_subdirectory(simulation)

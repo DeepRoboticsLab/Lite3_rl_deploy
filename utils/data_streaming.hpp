@@ -53,7 +53,7 @@ private:
 
 
 public:
-    DataStreaming(bool enable_online_plot=true, bool enable_data_record=false, const std::string& ip="172.16.8.39", int port=9870):
+    DataStreaming(bool enable_online_plot=true, bool enable_data_record=false, const std::string& ip="127.0.0.1", int port=9870):
     enable_online_plot_(enable_online_plot),
     enable_data_record_(enable_data_record){
         if(enable_online_plot_){
@@ -189,6 +189,15 @@ public:
         for(int i=0;i<data_json_["joint"].at("tau_ff").size();++i){
             file_ << "tau_ff"+std::to_string(i) << ",";
         }
+        for(int i=0;i<data_json_["imu"].at("rpy").size();++i){
+            file_ << "rpy"+std::to_string(i) << ",";
+        }
+        for(int i=0;i<data_json_["imu"].at("acc").size();++i){
+            file_ << "acc"+std::to_string(i) << ",";
+        }
+        for(int i=0;i<data_json_["imu"].at("omg").size();++i){
+            file_ << "omg"+std::to_string(i) << ",";
+        }
         file_ << "state" << ",";
         for(int i=0;i<scope_data_.size();++i){
             file_ << "scope"+std::to_string(i) << ",";
@@ -215,6 +224,15 @@ public:
         }
         for(int i=0;i<data_json_["joint"].at("tau_ff").size();++i){
             oss << data_json_["joint"].at("tau_ff")[i] << ",";
+        }
+        for(int i=0;i<data_json_["imu"].at("rpy").size();++i){
+            oss << data_json_["imu"].at("rpy")[i] << ",";
+        }
+        for(int i=0;i<data_json_["imu"].at("acc").size();++i){
+            oss << data_json_["imu"].at("acc")[i] << ",";
+        }
+        for(int i=0;i<data_json_["imu"].at("omg").size();++i){
+            oss << data_json_["imu"].at("omg")[i] << ",";
         }
         oss << data_json_["state"].at("current_state") << ",";
         for(int i=0;i<scope_data_.size();++i){
