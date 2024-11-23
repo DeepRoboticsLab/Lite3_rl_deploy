@@ -5,5 +5,5 @@ build
 
 data/*
 policy/*
-third_party/*
+third_party/libtorch
 !policy/model_13000.pt
