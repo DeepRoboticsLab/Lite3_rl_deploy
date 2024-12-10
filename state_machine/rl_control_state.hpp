@@ -118,7 +118,7 @@ public:
 
     bool PostureUnsafeCheck(){
         Vec3f rpy = ri_ptr_->GetImuRpy();
-        if(rpy(0) > 30./180*M_PI || rpy(1) > 45./180*M_PI){
+        if(fabs(rpy(0)) > 30./180*M_PI || fabs(rpy(1)) > 45./180*M_PI){
             std::cout << "posture value: " << 180./M_PI*rpy.transpose() << std::endl;
             return true;
         }
