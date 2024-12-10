@@ -149,7 +149,7 @@ public:
 
     void Run(){
         int cnt = 0;
-        static float time_record = 0;
+        static double time_record = 0;
         while(true){
             if(ri_ptr_->GetInterfaceTimeStamp()!= time_record){
                 time_record = ri_ptr_->GetInterfaceTimeStamp();

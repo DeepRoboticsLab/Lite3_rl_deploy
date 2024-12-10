@@ -19,10 +19,8 @@ using namespace types;
 class ControlParameters
 {
 private:
-    void GenerateX30Parameters();
     void GenerateLite3Parameters();
-    void GenerateP50Parameters();
-    void GenerateK1CParameters();
+
 public:
     ControlParameters(RobotType robot_type){
         if(robot_type==RobotType::Lite3) GenerateLite3Parameters();
