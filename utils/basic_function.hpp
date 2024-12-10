@@ -19,7 +19,7 @@ namespace functions{
 inline float LimitNumber(float data, float limit){
     limit = fabs(limit);
     if(data > limit) data = limit;
-    else if(data < limit) data = -limit;
+    else if(data < -limit) data = -limit;
     return data;
 }
 

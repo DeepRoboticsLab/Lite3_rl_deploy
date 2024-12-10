@@ -16,8 +16,4 @@ void ControlParameters::GenerateLite3Parameters(){
     fl_joint_upper_ << 0.530, 0.320, 2.80;
     joint_vel_limit_ << 30, 30, 20;
     torque_limit_ << 40, 40, 65;
-
-    common_policy_path_ = GetAbsPath()+"/../policy/lite3_common.pt";
-    common_policy_p_gain_ << 30., 30., 30.;
-    common_policy_d_gain_ << 0.8, 0.8, 0.8;
 }
