@@ -14,29 +14,38 @@ import socket
 import struct
 import threading
 import time
+import os
 
 urdfPath = {
-"lite3"    : "../../../third_party/URDF_model/lite3_urdf/lite3_pybullet/Lite3/urdf/Lite3.urdf",
+"lite3":    "/../../../third_party/URDF_model/lite3_urdf/lite3_pybullet/Lite3/urdf/Lite3.urdf",
+}
+
+initJointPos = {
+"lite3":    [0, -1.35453, 2.54948]*4,
 }
 
 class PyBulletSimulation:
-    def __init__(self, robot_name, urdf_path, local_port=20001, ctrl_ip="127.0.0.1", ctrl_port=30010) -> None:
+
+    def __init__(self, robot_name, local_port=20001, ctrl_ip="127.0.0.1", ctrl_port=30010) -> None:
         self.localPort = local_port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
         self.server.settimeout(5)
         self.ip = ctrl_ip
         self.ctrlAddr = (ctrl_ip, ctrl_port)
+        self.robotName = robot_name
 
-        self.robot_name = robot_name
         p.connect(p.GUI)
         p.setGravity(0, 0, -9.81)
         p.setAdditionalSearchPath(pd.getDataPath()) # 设置pybullet_data的文件路径
         self.terrain=p.loadURDF("plane.urdf") 
         p.changeDynamics(self.terrain, -1, lateralFriction=1)
-        zInit = 0.45 
+        zInit = 0.42 
         startPos = [0.0, 0, zInit]
+        currentFilePath = os.path.abspath(__file__)
+        currentDirectory = os.path.dirname(currentFilePath)
+        robotUrdfPath = currentDirectory + urdfPath[self.robotName]
         urdfFlags = p.URDF_USE_SELF_COLLISION_EXCLUDE_PARENT | p.URDF_USE_INERTIA_FROM_FILE | p.URDF_USE_SELF_COLLISION_EXCLUDE_ALL_PARENTS
-        self.robot = p.loadURDF(urdf_path, startPos, flags=urdfFlags, useFixedBase=False)
+        self.robot = p.loadURDF(robotUrdfPath, startPos, flags=urdfFlags, useFixedBase=False)
         
         self.numOfJoints = p.getNumJoints(self.robot)
         self.jointIdxList = []
@@ -52,6 +61,7 @@ class PyBulletSimulation:
                 p.changeDynamics(self.robot, j, lateralFriction=0.8, spinningFriction=0.03*0.8)
             if jointInfo[2]==p.JOINT_REVOLUTE:
                 self.jointIdxList.append(j)
+                p.resetJointState(self.robot, j, targetValue=initJointPos[self.robotName][len(self.jointIdxList)-1])
                 p.setJointMotorControl2(self.robot, j, p.VELOCITY_CONTROL, force=0)
                 print(j, " : ", jointName, " qIndex : ", jointInfo[3], " uIndex : ", jointInfo[4], "lower : ", lower, 'upper : ', upper)
         self.dofNum=len(self.jointIdxList)
@@ -152,7 +162,7 @@ class PyBulletSimulation:
 
 
 if __name__ == '__main__':
-    ps = PyBulletSimulation("lite3", urdfPath["lite3"])
+    ps = PyBulletSimulation("lite3")
     receiveThread = threading.Thread(target=ps.receiveJointCmd)
     receiveThread.start()
     ps.startSimulation()
