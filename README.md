@@ -118,7 +118,7 @@ sudo apt-get install expect
 
 2.连上狗的wifi 
 
-3.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改~/jy_exe/conf/network.toml将ip项修改为运动主机的本地ip[127.0.0.1](http://127.0.0.1)，然后重新执行`sudo ~/jy_exe/restart.sh`脚本重启运动程序。 
+3.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改`~/jy_exe/conf/network.toml`将ip项修改为运动主机的本地ip[127.0.0.1](http://127.0.0.1)，然后重新执行`sudo ~/jy_exe/restart.sh`脚本重启运动程序。 
 
 4.远程连接狗，进入rl_deploy文件夹，执行编译执行流程。 
 
@@ -129,7 +129,7 @@ cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=off -DSEND_REMOTE=OFF
 make -j4 
 ```
 
-5.直接执行./rl_deploy。观察程序能否正常运行，解决具体问题。实现键盘操控或者手柄配置
+5.直接执行`./rl_deploy`。观察程序能否正常运行，解决具体问题。实现键盘操控或者手柄配置
 
 
 
@@ -137,11 +137,11 @@ make -j4
 
 1.利用“金手指”与Lite3有线连接，能够通过本机ping通运动主机192.168.1.120。
 
-2.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改~/jy_exe/conf/network.toml将ip项修改为本机ip(192.168.1.xxx)，然后重新执行 sudo ~/jy_exe/restart.sh脚本重启运动程序。
+2.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改`~/jy_exe/conf/network.toml`将ip项修改为本机ip(192.168.1.xxx)，然后重新执行 `sudo ~/jy_exe/restart.sh`脚本重启运动程序。
 
 3.本地编译通过。
 
-4.直接执行./rl_deploy
+4.直接执行`./rl_deploy`
 
 
 
@@ -151,7 +151,7 @@ make -j4
 
 1.确保本机安装python和pybullet(通过pip install pybullet安装即可)，确保pybullet可以正常import和打开。
 
-2.执行命令，打开仿真环境，这里需要对third_party/URDF_model/lite3_urdf/目录下的压缩文件进行解压。
+2.执行命令，打开仿真环境，这里需要对`third_party/URDF_model/lite3_urdf/`目录下的压缩文件进行解压。
 
 ```bash
 cd interface/robot/simulation
