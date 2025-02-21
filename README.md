@@ -1,5 +1,7 @@
 # RL_DEPLOY
 
+[English](./README_EN.md)
+
 ## 下载编译
 
 ```bash
@@ -21,7 +23,7 @@ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
 <img src="./doc/libtorch.png" alt="a" style="zoom:75%;" />
 
-3.目前示例给出的远程遥控是按照手柄输入来的，建议提前根据https://github.com/DeepRoboticsLab/gamepad.git 中的介绍提前测试一下手柄的通讯是否正常。
+3.目前示例给出的远程遥控是按照手柄输入来的，建议提前根据[gamepad](https://github.com/DeepRoboticsLab/gamepad.git) 中的介绍提前测试一下手柄的通讯是否正常。
 
 4.示例程序中给出了基于pybullet平台的仿真验证程序，有兴趣的同学可以前往https://pybullet.org/wordpress/ 了解细节。
 
@@ -41,7 +43,7 @@ D-->A
 
 ```
 
-state_machine是Lite3在不同的状态之间来回切换，不同的状态代表的功能如下：
+state_machine模块是Lite3在不同的状态之间来回切换，不同的状态代表的功能如下：
 
 1.Idle 空闲状态，表示机器狗处于关节不发力的情况
 
@@ -64,7 +66,7 @@ C-->G(keyboard)
 
 ```
 
-interface模块表示狗的数据接受和下发接口和手柄控制的输入。其中机器狗平台的输入分为仿真和实物，手柄的输入分为键盘和手柄控制。
+interface模块表示机器狗的数据接受和下发接口和手柄控制的输入。其中机器狗平台的输入分为仿真和实物，手柄的输入分为键盘和手柄控制。
 
 ### run_policy
 
@@ -95,9 +97,9 @@ sudo apt-get install expect
 
 4.在本机执行rl_deploy/scripts目录下的scp_torch_to_remote.sh脚本，注意修改脚本中定义的ip和用户名 
 
-5.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改Lite3运动主机中~/jy_exe/conf/network.toml将ip项修改为运动主机本地的ip127.0.0.1或者其他本地ip，然后重新执行 sudo ~/jy_exe/restart.sh脚本重启运动程序。 
+5.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改Lite3运动主机中的`~/jy_exe/conf/network.toml`，将ip项修改为运动主机本地的ip[127.0.0.1](http://127.0.0.1)或者其他本地ip，然后重新执行`sudo ~/jy_exe/restart.sh`脚本重启运动程序。 
 
-6.进入本地的rl_deploy文件夹，执行编译执行流程。
+6.进入本地的`rl_deploy`文件夹，执行编译执行流程。
 
 ```shell
  mkdir build 
@@ -106,17 +108,17 @@ sudo apt-get install expect
  make -j4 
 ```
 
-7.直接执行./rl_deploy。观察程序能否正常运行，解决具体问题。实现键盘控制或者手柄控制。
+7.直接执行`./rl_deploy`。观察程序能否正常运行，解决具体问题。实现键盘控制或者手柄控制。
 
 
 
 ### 2.Lite3运动主机部署
 
-1.将rl_deploy文件夹直接拖入或者scp到运动主机的根目录下 
+1.将`rl_deploy`文件夹直接拖入或者scp到运动主机的根目录下 
 
 2.连上狗的wifi 
 
-3.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改~/jy_exe/conf/network.toml将ip项修改为运动主机的本地ip[127.0.0.1](http://127.0.0.1)，然后重新执行 sudo ~/jy_exe/restart.sh脚本重启运动程序。 
+3.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)连进狗的运动主机。修改~/jy_exe/conf/network.toml将ip项修改为运动主机的本地ip[127.0.0.1](http://127.0.0.1)，然后重新执行`sudo ~/jy_exe/restart.sh`脚本重启运动程序。 
 
 4.远程连接狗，进入rl_deploy文件夹，执行编译执行流程。 
 
