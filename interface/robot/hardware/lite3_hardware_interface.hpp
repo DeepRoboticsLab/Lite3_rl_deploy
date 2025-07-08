@@ -2,11 +2,12 @@
 #define LITE3_HARDWARE_INTERFACE_HPP_
 
 #include "robot_interface.h"
-#include "lite3_types.h"
+// #include "lite3_types.h"
+# include "robot_types.h"
 #include "receiver.h"
 #include "sender.h"
 
-using namespace lite3;
+// using namespace lite3;
 
 class Lite3HardwareInterface : public RobotInterface
 {
@@ -25,7 +26,8 @@ public:
                         std::string robot_ip="192.168.2.1",
                         int robot_port=43893):RobotInterface(robot_name, 12){
         std::cout << robot_name << " is using Lite3 Hardware Interface" << std::endl;
-        receiver_ = new Receiver(local_port);
+        // receiver_ = new Receiver(local_port);
+        receiver_ = new Receiver();
         sender_ = new Sender(robot_ip, robot_port);
         sender_->RobotStateInit();
     }
@@ -68,16 +70,24 @@ public:
         }
         return joint_tau_;
     }
+    // virtual Vec3f GetImuRpy() {
+    //     rpy_ << robot_data_->imu.roll/180.*M_PI, robot_data_->imu.pitch/180.*M_PI, robot_data_->imu.yaw/180.*M_PI;
+    //     return rpy_;
+    // }
     virtual Vec3f GetImuRpy() {
-        rpy_ << robot_data_->imu.roll/180.*M_PI, robot_data_->imu.pitch/180.*M_PI, robot_data_->imu.yaw/180.*M_PI;
+        rpy_ << robot_data_->imu.angle_roll/180.*M_PI, robot_data_->imu.angle_pitch/180.*M_PI, robot_data_->imu.angle_yaw/180.*M_PI;
         return rpy_;
     }
     virtual Vec3f GetImuAcc() {
         acc_ << robot_data_->imu.acc_x, robot_data_->imu.acc_y, robot_data_->imu.acc_z;
         return acc_;
     }
+    // virtual Vec3f GetImuOmega() {
+    //     omega_body_ << robot_data_->imu.omega_x, robot_data_->imu.omega_y, robot_data_->imu.omega_z;
+    //     return omega_body_;
+    // }
     virtual Vec3f GetImuOmega() {
-        omega_body_ << robot_data_->imu.omega_x, robot_data_->imu.omega_y, robot_data_->imu.omega_z;
+        omega_body_ << robot_data_->imu.angular_velocity_roll, robot_data_->imu.angular_velocity_pitch, robot_data_->imu.angular_velocity_yaw;
         return omega_body_;
     }
     virtual VecXf GetContactForce() {

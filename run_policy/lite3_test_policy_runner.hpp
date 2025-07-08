@@ -13,6 +13,8 @@
 #define LITE3_TEST_POLICY_RUNNER_HPP_
 
 #include "policy_runner_base.hpp"
+#include "torch/torch.h"
+#include "torch/script.h"
 
 class Lite3TestPolicyRunner : public PolicyRunnerBase
 {
@@ -46,8 +48,13 @@ public:
                             -0.0, -1, 1.8,
                             0.0, -1, 1.8,
                             -0.0, -1, 1.8;
-        kp_ = 20.*VecXf::Ones(12);
-        kd_ = 0.7*VecXf::Ones(12);
+        // kp_ = 20.*VecXf::Ones(12);
+        // kd_ = 0.7*VecXf::Ones(12);
+
+        // // for mujoco
+        kp_ = 30.*VecXf::Ones(12);
+        kd_ = 0.9 *VecXf::Ones(12);
+
         max_cmd_vel_ << 0.8, 0.3, 0.6;
 
         try { 
@@ -125,6 +132,8 @@ public:
         last_dof_vel1_ = last_dof_vel0_;
         last_dof_vel0_ = ro.joint_vel;
 
+        // ---------------------------------
+
         Eigen::MatrixXf temp = obs_total_.transpose();
         torch::Tensor a = torch::from_blob(temp.data(), {temp.rows(), temp.cols()}, torch::kFloat);
         obs_total_tensor_ = a.clone();
@@ -135,6 +144,9 @@ public:
 
         // Eigen::Matrix<float, 12, 1> act(action_tensor_.data_ptr<float>());
         Eigen::Map<Eigen::MatrixXf> act(action_tensor_.data_ptr<float>(), act_dim_, 1);
+        
+        // ------------------
+
         action_ = 0.25*act.col(0);
 
         last_action1_ = last_action0_;

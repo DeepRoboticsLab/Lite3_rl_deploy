@@ -12,8 +12,7 @@
 #ifndef POLICY_RUNNER_BASE_HPP_
 #define POLICY_RUNNER_BASE_HPP_
 
-#include "torch/torch.h"
-#include "torch/script.h"
+
 #include "common_types.h"
 
 using namespace types;

@@ -34,6 +34,7 @@ namespace types{
 
     struct RobotBasicState{
         Vec3f base_rpy;
+        Vec3f projected_gravity;
         Vec4f base_quat;
         Mat3f base_rot_mat;
         Vec3f base_omega;

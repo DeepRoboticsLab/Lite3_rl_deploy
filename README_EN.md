@@ -1,35 +1,105 @@
-# RL_DEPLOY
-
 [简体中文](./README.md)
 
-## Download and Compile
+## Sim-to-Sim
 
 ```bash
-git clone --recurse-submodules https://github.com/DeepRoboticsLab/Lite3_rl_deploy.git
+# Dependency install (python3.10)
+pip install pybullet "numpy < 2.0" mujoco
+
+# compile
+cd Lite3_rl_deploy
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=off -DSEND_REMOTE=OFF 
-make -j4
+cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
+
+# Explanation
+# -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
+# -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
+# -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
+make && cd ..
 ```
-
-### Cautions:
-
-1.Lite3 sports motherboard is arm architecture, if compiled to run on the dog need to install cross-compile tools.
 
 ```bash
-sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+# run (open 2 terminals)
+# Terminal 1 (pybullet)
+cd interface/robot/simulation
+python pybullet_simulation.py
+
+# Terminal 1 (mujoco)
+cd interface/robot/simulation
+python mujoco_simulation.py
+
+# Terminal 2 
+./build/rl_deploy
 ```
 
-2.Running the policy file trained by RL requires linking to the libtorch library, which needs to be downloaded or compiled from the official website (https://pytorch.org/) depending on the architecture and configuration of the running host. Because the libtorch program is rather large, it is not added in the repository. If there is a need for libtorch libraries for arm architecture CPU-based (Lite3 motion host architecture), you can leave a message in issues.
+## Usage(Terminal 2)
 
-<img src="./doc/libtorch.png" alt="a" style="zoom:75%;" />
+tips：right click simulator window and select "always on top"
 
-3.The remote control given in the current example follows the controller input, it is recommended to test the controller communication in advance to see if it is working properly according to the introduction in [gamepad](https://github.com/DeepRoboticsLab/gamepad.git) in advance.
+- z： default position
+- c： rl control default position
+- wasd：forward/leftward/backward/rightward
+- qe：clockwise/counter clockwise
 
-4.The sample program gives a simulation verification program based on the pybullet platform, if interested go to https://pybullet.org/wordpress/ for details.
+# Sim-to-Real
 
+```bash
+# apply code_modification
 
+# computer and gamepad should both connect to WiFi
+# WiFi: Lite*******
+# Passward: 12345678 (If wrong, contact technical support)
+#check ip after connected to wifi (192.168.1.120/192.168.2.1)
 
-## Introduction to Each Module
+# scp to transfer files to quadruped (open a terminal on your local computer)
+scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
+
+# ssh connect for remote development, the passward has the following 3 combinations
+#Username	Password
+#ysc		' (a single quote)
+#user		123456 (Recommended)
+#firefly	firefly
+ssh user@192.168.2.1
+# enter your passward, the terminal will be active on the qurdruped computer
+
+# compile
+cd Lite3_rl_deploy
+mkdir build && cd build
+cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF -DHIMLOCO=ON
+# Explanation
+# -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
+# -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
+# -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
+make && cd ..
+```
+
+## Usage(Retroid gamepad)
+
+Please refer to https://github.com/DeepRoboticsLab/gamepad
+
+## Model Conversion
+
+To run the policy file trained with RL, you need to link the onnxruntime library, which supports models in the .onnx format. Therefore, you must manually convert the .pt model to the .onnx format.
+
+You can convert the .pt model to the .onnx model by running the pt2onnx.py file in the policy folder. Pay attention to the program output to compare the consistency between the two models.
+
+First, configure and verify the program runtime environment:
+
+```bash
+pip install torch numpy onnx onnxruntime
+
+python3 -c 'import torch, numpy, onnx, onnxruntime; print(" All modules OK")'
+```
+
+Then, run the program:
+
+```bash
+cd your/path/to/LITE3_RL_DEPOLY/policy/
+
+python pt2onnx.py
+```
+
+Afterward, you will see the corresponding .onnx model file in the current folder.
 
 ### state_machine
 
@@ -79,95 +149,4 @@ A(policy_runner_base) -->B(policy_runner)
 
 This section is used to execute the output of the RL policy, new policies can be implemented by inheriting policy_runner_base.
 
-
-
-## Steps for live deployment
-
-### 1. Local computer cross-compile deployment
-
-1.Prepare Ubuntu computer with system 18.04 or 20.04, if not you need to scp the program to the motion host to compile and run it.
-
-2.Install the expect script interpreter on your computer. 
-
-```shell
-sudo apt-get install expect
-```
-
-3.Connect to the robot's wifi 
-
-4.Execute the scp_torch_to_remote.sh script in the `rl_deploy/scripts` directory locally, taking care to modify the ip and username defined in the script 
-
-5.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120) connect into the robot's motion host. Modify the `~/jy_exe/conf/network.toml` file in the Lite3 motion host to change the ip entry to the motion host's local ip 127.0.0.1 or other local ip. Then re-execute the `sudo ~/jy_exe/restart.sh` script to restart the motion program.
-
-6.Go to the local `rl_deploy` folder and perform the compile execution process.
-
-```shell
- mkdir build 
- cd build 
- cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=off -DSEND_REMOTE=ON 
- make -j4 
-```
-
-7.Execute `./rl_deploy`. Observe whether the program works properly and solve specific problems. Implement keyboard control or joystick control.
-
-
-
-### 2. Lite3 Motion Host Deployment
-
-1.Drag or scp the `rl_deploy` folder into the root directory of the motion host. 
-
-2.Connect to the robot's wifi 
-
-3.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)connect into the robot's motion host. Modify `~/jy_exe/conf/network.toml` to change the ip entry to the local ip of the motion host [127.0.0.1] (http://127.0.0.1), then re-execute the `sudo ~/jy_exe/restart.sh` script to restart the motion program. 
-
-4.Remotely connect to the robot, go to the `rl_deploy` folder and perform the compile execution process. 
-
-```shell
-mkdir build 
-cd build 
-cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=off -DSEND_REMOTE=OFF 
-make -j4 
-```
-
-5.Execute `./rl_deploy`. Observe whether the program works properly and solve specific problems. Implement keyboard control or joystick control.
-
-
-
-### 3.Local Direct Run
-
-1.Utilizing connecting finger with a wired connection to the Lite3, and able to ping the motion host `192.168.1.120` through this machine.
-
-2.ssh [ysc@192.168.1.120](mailto:ysc@192.168.1.120)connect into the robot's motion host. Modify `~/jy_exe/conf/network.toml` to change the ip entry to the local ip of the motion host (192.168.1.xxx), then re-execute the `sudo ~/jy_exe/restart.sh` script to restart the motion program.
-
-3.Local compilation passed.
-
-4.Execute `./rl_deploy`.
-
-
-
-## Simulation Verification
-
-The program can also be verified with other simulation platforms to verify that the motion program works properly, which can be verified with pybullet (Raisim). pybullet simulation and the C++ motion program are communicating in real time via UDP. In order to realize the simulation verification, you need to install the corresponding python as well as the simulation environment.
-
-1.Make sure python and pybullet are installed locally (just install them via `pip install pybullet`), and make sure pybullet can be imported and opened normally.
-
-2.Execute the command to open the simulation environment, here you need to decompress the compressed files in the `third_party/URDF_model/lite3_urdf/` directory.
-
-```bash
-cd interface/robot/simulation
-python pybullet_simulation.py
-```
-
-3.Compile the program, need to consider the compilation options for the emulation.
-
-```bash
-mkdir build 
-cd build 
-cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF 
-make -j4 
-```
-
-4.Execute the compiled executable to realize the control of the robot in the pybullet environment. Subsequent development can be verified in the simulation environment first.
-
-<img src="./doc/pybullet_sim.png" alt="a" style="zoom:75%;" />
 

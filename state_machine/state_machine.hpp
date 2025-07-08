@@ -15,7 +15,14 @@
 #include "idle_state.hpp"
 #include "standup_state.hpp"
 #include "joint_damping_state.hpp"
-#include "rl_control_state.hpp"
+
+// #ifdef USE_ONNX
+//     #include "rl_control_state_onnx.hpp"
+// #else   
+//     #include "rl_control_state.hpp"
+// #endif
+
+#include "rl_control_state_onnx.hpp"
 
 #include "skydroid_gamepad_interface.hpp"
 #include "retroid_gamepad_interface.hpp"
@@ -26,6 +33,11 @@
 #ifdef USE_PYBULLET
     #include "simulation/pybullet_interface.hpp"
 #endif
+
+#ifdef USE_MJCPP
+    #include "simulation/mujoco_interface.hpp"
+#endif
+
 #include "hardware/lite3_hardware_interface.hpp"
 #include "data_streaming.hpp"
 
@@ -102,16 +114,25 @@ public:
     StateMachine(RobotType robot_type){
         const std::string activation_key = "~/raisim/activation.raisim";
         std::string urdf_path = "";
-        // uc_ptr_ = std::make_shared<SkydroidGamepadInterface>(12121);
-        uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
+        std::string mjcf_path = "";
+        #ifdef BUILD_SIMULATION
+            uc_ptr_ = std::make_shared<KeyboardInterface>();
+        #else
+            uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
+        #endif
         // uc_ptr_ = std::make_shared<KeyboardInterface>();
-
+        // uc_ptr_ = std::make_shared<RetroidGamepadInterface>(12121);
         if(robot_type == RobotType::Lite3){
             urdf_path = GetAbsPath()+"/../third_party/URDF_model/lite3_urdf/Lite3/urdf/Lite3.urdf";
+            mjcf_path = GetAbsPath()+"third_party/URDF_model/Lite3/Lite3_mjcf/mjcf/Lite3.xml";
             #ifdef USE_RAISIM
                 ri_ptr_ = std::make_shared<JueyingRaisimSimulation>(activation_key, urdf_path, "Lite3_sim");
-            #endif
-            #ifdef USE_PYBULLET
+
+            #elif defined(USE_MJCPP)
+                ri_ptr_ = std::make_shared<MujocoInterface>("Lite3", mjcf_path);
+                std::cout << "Using MujocoInterface CPP " << std::endl;
+                std::cout << "mjcf_path: " << mjcf_path << std::endl;
+            #elif defined(USE_PYBULLET)
                 ri_ptr_ = std::make_shared<PybulletInterface>("Lite3");
             #else
                 ri_ptr_ = std::make_shared<Lite3HardwareInterface>("Lite3");
@@ -130,7 +151,18 @@ public:
 
         idle_controller_ = std::make_shared<IdleState>(robot_type, "idle_state", data_ptr);
         standup_controller_ = std::make_shared<StandUpState>(robot_type, "standup_state", data_ptr);
-        rl_controller_ = std::make_shared<RLControlState>(robot_type, "rl_control", data_ptr);
+
+        // 测试ONNX，后续需要改成参数控制
+        // rl_controller_ = std::make_shared<RLControlState>(robot_type, "rl_control", data_ptr);
+        // #ifdef USE_ONNX
+        //     rl_controller_ = std::make_shared<RLControlStateONNX>(robot_type, "rl_control", data_ptr);
+        // #else
+        //     rl_controller_ = std::make_shared<RLControlState>(robot_type, "rl_control", data_ptr);
+        // #endif
+        rl_controller_ = std::make_shared<RLControlStateONNX>(robot_type, "rl_control", data_ptr);
+        
+
+
         joint_damping_controller_ = std::make_shared<JointDampingState>(robot_type, "joint_damping", data_ptr);
 
         current_controller_ = idle_controller_;
@@ -141,6 +173,7 @@ public:
         std::this_thread::sleep_for(std::chrono::seconds(3)); //for safety 
 
         ri_ptr_->Start();
+        std::cout << "Robot interface started" << std::endl;
         uc_ptr_->Start();
         
         current_controller_->OnEnter();  
@@ -154,9 +187,10 @@ public:
             if(ri_ptr_->GetInterfaceTimeStamp()!= time_record){
                 time_record = ri_ptr_->GetInterfaceTimeStamp();
                 current_controller_ -> Run();
+                
                 if(current_controller_->LoseControlJudge()) next_state_name_ = StateName::kJointDamping;
                 else next_state_name_ = current_controller_ -> GetNextStateName();
-                // std::cout << current_controller_ -> state_name_ << std::endl;    
+                std::cout << "current state:"<<current_controller_ -> state_name_ << std::endl;    
                 if(next_state_name_ != current_state_name_){
                     current_controller_ -> OnExit();
                     std::cout << current_controller_ -> state_name_ << " ------------> ";

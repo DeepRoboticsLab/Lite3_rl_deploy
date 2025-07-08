@@ -11,6 +11,8 @@ void ControlParameters::GenerateLite3Parameters(){
     stand_height_ = 0.30;
     swing_leg_kp_ << 100., 100., 100.;
     swing_leg_kd_ << 2.5, 2.5, 2.5;
+    // swing_leg_kp_ << 180., 180., 180.;
+    // swing_leg_kd_ << 3.5, 3.5, 3.5;
 
     fl_joint_lower_ << -0.530, -3.50, 0.349;
     fl_joint_upper_ << 0.530, 0.320, 2.80;

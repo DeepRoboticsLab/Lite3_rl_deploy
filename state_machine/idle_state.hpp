@@ -55,16 +55,16 @@ private:
     bool ImuDataNormalCheck(){
         for(int i=0;i<3;++i){
             if(std::isnan(rpy_(i)) || fabs(rpy_(i)) > M_PI){
-                // std::cout << "rpy_ " << i << " : " << rpy_(i) << std::endl;
+                std::cout << "rpy_ " << i << " : " << rpy_(i) << std::endl;
                 return false;
             } 
             if(std::isnan(omg_(i)) || fabs(omg_(i)) > M_PI){
-                // std::cout << "omg_ " << i << " : " << omg_(i) << std::endl;
+                std::cout << "omg_ " << i << " : " << omg_(i) << std::endl;
                 return false;
             }
         }
         if(acc_.norm() < 0.1*gravity || acc_.norm() > 3.0*gravity){
-            // std::cout << "acc " << " : " << acc.transpose() << std::endl;
+            std::cout << "acc " << " : " << acc_.transpose() << std::endl;
             return false;
         }
         return true;
@@ -99,6 +99,7 @@ public:
 
     virtual void OnEnter() {
         StateBase::msfb_.UpdateCurrentState(RobotMotionState::WaitingForStand);
+        std::cout << "Waiting for stand up..." << std::endl;
         uc_ptr_->SetMotionStateFeedback(StateBase::msfb_);
         enter_state_time_ = ri_ptr_->GetInterfaceTimeStamp();
     };
@@ -116,19 +117,24 @@ public:
         MatXf cmd = MatXf::Zero(12, 5);
         ri_ptr_->SetJointCommand(cmd);
     }
+
     virtual bool LoseControlJudge() {
         return false;
     }
+
     virtual StateName GetNextStateName() {
+        std::cout << "Current target_mode = " << uc_ptr_->GetUserCommand().target_mode << std::endl;
+
         if(!joint_normal_flag_ || !imu_normal_flag_) {
             std::cout << "joint status: " << joint_normal_flag_ << " | imu status: " << imu_normal_flag_ << std::endl;
             return StateName::kIdle;
         }
-        if(first_enter_flag_ && ri_ptr_->GetInterfaceTimeStamp() - enter_state_time_ < 2.){
+        if(first_enter_flag_ && ri_ptr_->GetInterfaceTimeStamp() - enter_state_time_ < 0.5){
             return StateName::kIdle;
         }
-        
+            
         if(uc_ptr_->GetUserCommand().target_mode == int(RobotMotionState::StandingUp)) return StateName::kStandUp;
+        
         return StateName::kIdle;
     }
 };

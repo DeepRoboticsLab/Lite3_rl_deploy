@@ -42,6 +42,12 @@ inline Mat3f RpyToRm(const Vec3f &rpy){
     return q.matrix();
 }
 
+inline Vec3f RmToProjectedGravity(const Mat3f& rm) {        
+    Vec3f gravity_world(0.f, 0.f, -1.f);   
+    Vec3f gravity_base = rm.transpose() * gravity_world;
+    return gravity_base;
+}
+
 inline float NormalizeAngle(float angle) {
     float result = std::fmod(angle, 2 * M_PI);
     
@@ -56,7 +62,7 @@ inline float NormalizeAngle(float angle) {
     return result;
 }
 
- inline float Sign(const float &i){
+inline float Sign(const float &i){
     if (i > 0) {
         return 1.;
     } else if (i == 0) {
