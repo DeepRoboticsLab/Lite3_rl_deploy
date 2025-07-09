@@ -26,8 +26,12 @@ URDF_INIT = {
 }
 
 class MuJoCoSimulation:
-    def __init__(self, model_key: str = MODEL_NAME, xml_relpath: str = XML_PATH,
-                 local_port: int = LOCAL_PORT, ctrl_ip: str = CTRL_IP, ctrl_port: int = CTRL_PORT):
+    def __init__(self, model_key: str = MODEL_NAME, 
+                 xml_relpath: str = XML_PATH,
+                 local_port: int = LOCAL_PORT, 
+                 ctrl_ip: str = CTRL_IP, 
+                 ctrl_port: int = CTRL_PORT):
+        
         # UDP communication
         self.local_port = local_port
         self.ctrl_addr = (ctrl_ip, ctrl_port)
@@ -42,17 +46,18 @@ class MuJoCoSimulation:
             raise FileNotFoundError(f"Cannot find MJCF: {xml_full}")
 
         self.model = mujoco.MjModel.from_xml_path(xml_full)
+        self.model.opt.timestep = DT
         self.data = mujoco.MjData(self.model)
 
         # Robot DOF list
         self.actuator_ids = [a for a in range(self.model.nu)]  # 0..11
-        self.dof = len(self.actuator_ids)
+        self.dof_num = len(self.actuator_ids)
 
         # Initialize standing pose
         self._set_initial_pose(model_key)
 
         # Buffers
-        self.kp_cmd = np.zeros((self.dof, 1), np.float32)
+        self.kp_cmd = np.zeros((self.dof_num, 1), np.float32)
         self.kd_cmd = np.zeros_like(self.kp_cmd)
         self.pos_cmd = np.zeros_like(self.kp_cmd)
         self.vel_cmd = np.zeros_like(self.kp_cmd)
@@ -64,7 +69,7 @@ class MuJoCoSimulation:
         self.timestamp = 0.0
         self.last_print_time = 0  # Track last print time
 
-        print(f"[INFO] MuJoCo model loaded, dof = {self.dof}")
+        print(f"[INFO] MuJoCo model loaded, dof = {self.dof_num}")
 
         # Visualization
         self.viewer = None
@@ -74,7 +79,7 @@ class MuJoCoSimulation:
     def _set_initial_pose(self, key: str):
         """Set joint positions to match PyBullet initial angles."""
         qpos0 = self.data.qpos.copy()
-        qpos0[7:7+self.dof] = URDF_INIT[key]
+        qpos0[7:7+self.dof_num] = URDF_INIT[key]
         self.data.qpos[:] = qpos0
         mujoco.mj_forward(self.model, self.data)
 
@@ -85,8 +90,8 @@ class MuJoCoSimulation:
             return "[" + ", ".join(f"{x:6.2f}" for x in arr) + "]"
 
         # Get current joint states for printing
-        q = self.data.qpos[7:7+self.dof].reshape(-1, 1)
-        dq = self.data.qvel[6:6+self.dof].reshape(-1, 1)
+        q = self.data.qpos[7:7+self.dof_num].reshape(-1, 1)
+        dq = self.data.qvel[6:6+self.dof_num].reshape(-1, 1)
         tau = self.input_tq.flatten()
         q_world = self.data.qpos[3:7]
         rpy = self.quaternion_to_euler(q_world)
@@ -120,40 +125,38 @@ class MuJoCoSimulation:
 
         # Main simulation loop
         step = 0
+        last_time = time.time()
         while True:
-            t0 = time.perf_counter()
+            if time.time() - last_time >= DT:
+                last_time = time.time()
+                
+                step += 1
+                # 控制律
 
-            # Apply control
-            self._apply_joint_torque()
+                self._apply_joint_torque()
+                # 模拟一步
+                mujoco.mj_step(self.model, self.data)
 
-            # Step simulation
-            mujoco.mj_step(self.model, self.data)
+                self.timestamp = step * DT
 
-            # Send observations
-            self._send_robot_state(step)
-
-            # Visualize
-            if self.viewer and step % RENDER_INTERVAL == 0:
-                self.viewer.sync()
-
-            # Print at 0.5 Hz (every 2 seconds)
-            current_time = time.perf_counter()
-            if current_time - self.last_print_time >= 2.0:
-                self.print_debug_info()
-                self.last_print_time = current_time
-
-            # Throttle to 1 kHz
-            step += 1
-            self.timestamp = step * DT
-            dt = time.perf_counter() - t0
-            if dt < DT:
-                time.sleep(DT - dt)
+                # 采样 & 发送观测
+                self._send_robot_state(step)
+                # 可视化
+                if self.viewer and step % RENDER_INTERVAL == 0:
+                    self.viewer.sync()
+                    
+                # Print at 0.5 Hz (every 2 seconds)
+                current_time = time.perf_counter()
+                if current_time - self.last_print_time >= 2.0:
+                    self.print_debug_info()
+                    self.last_print_time = current_time
+                    
 
     def _udp_receiver(self):
         """
         12f kp | 12f pos | 12f kd | 12f vel | 12f tau = 240 bytes
         """
-        fmt = "12f"*5
+        fmt = f'{self.dof_num}f' * 5
         expected = struct.calcsize(fmt)
         while True:
             data, addr = self.recv_sock.recvfrom(expected)
@@ -161,16 +164,19 @@ class MuJoCoSimulation:
                 print(f"[WARN] UDP packet size {len(data)} != {expected}")
                 continue
             unpacked = struct.unpack(fmt, data)
-            self.kp_cmd = np.asarray(unpacked[0:12], dtype=np.float32).reshape(-1, 1)
-            self.pos_cmd = np.asarray(unpacked[12:24], dtype=np.float32).reshape(-1, 1)
-            self.kd_cmd = np.asarray(unpacked[24:36], dtype=np.float32).reshape(-1, 1)
-            self.vel_cmd = np.asarray(unpacked[36:48], dtype=np.float32).reshape(-1, 1)
-            self.tau_ff = np.asarray(unpacked[48:60], dtype=np.float32).reshape(-1, 1)
+            self.kp_cmd = np.asarray(unpacked[0:self.dof_num], dtype=np.float32).reshape(self.dof_num, 1)
+            self.pos_cmd = np.asarray(unpacked[self.dof_num:self.dof_num * 2], dtype=np.float32).reshape(self.dof_num,
+                                                                                                         1)
+            self.kd_cmd = np.asarray(unpacked[self.dof_num * 2:self.dof_num * 3], dtype=np.float32).reshape(
+                self.dof_num, 1)
+            self.vel_cmd = np.asarray(unpacked[self.dof_num * 3:self.dof_num * 4], dtype=np.float32).reshape(
+                self.dof_num, 1)
+            self.tau_ff = np.asarray(unpacked[self.dof_num * 4:], dtype=np.float32).reshape(self.dof_num, 1)
 
     def _apply_joint_torque(self):
         # Current joint states
-        q = self.data.qpos[7:7+self.dof].reshape(-1, 1)
-        dq = self.data.qvel[6:6+self.dof].reshape(-1, 1)
+        q = self.data.qpos[7:7+self.dof_num].reshape(-1, 1)
+        dq = self.data.qvel[6:6+self.dof_num].reshape(-1, 1)
 
         # τ = kp*(q_d - q) + kd*(dq_d - dq) + τ_ff
         self.input_tq = (
@@ -202,13 +208,11 @@ class MuJoCoSimulation:
         q_world = self.data.qpos[3:7]
         rpy = self.quaternion_to_euler(q_world)
         angvel_b = self.data.qvel[3:6]
-        mat = np.zeros(9, dtype=np.float64)
-        mujoco.mju_quat2Mat(mat, q_world.astype(np.float64))
         body_acc = self.data.sensordata[16:19]
 
         # Joints
-        q = self.data.qpos[7:7+self.dof]
-        dq = self.data.qvel[6:6+self.dof]
+        q = self.data.qpos[7:7+self.dof_num]
+        dq = self.data.qvel[6:6+self.dof_num]
         tau = self.input_tq.flatten()
 
         # Pack and send
@@ -223,7 +227,8 @@ class MuJoCoSimulation:
         ))
         fmt = "1d" + f"{len(payload)-1}f"
         try:
-            self.send_sock.sendto(struct.pack(fmt, *payload), self.ctrl_addr)
+            self.send_sock.sendto(struct.pack(fmt, *payload), 
+                                  self.ctrl_addr)
         except socket.error as ex:
             print(f"[UDP send] {ex}")
 
