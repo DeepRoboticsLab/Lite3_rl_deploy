@@ -14,7 +14,7 @@ cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
 # -DBUILD_PLATFORM：电脑平台，Ubuntu为x86，机器狗运动主机为arm
 # -DBUILD_SIM：是否使用仿真器，如果在实机上部署设为OFF 
 # -DHIMLOCO：支持算法，默认为rma，可选himloco
-make && cd ..
+make -j && cd ..
 ```
 
 ```bash

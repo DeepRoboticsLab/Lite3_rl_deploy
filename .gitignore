@@ -3,9 +3,5 @@ build
 .vscode
 
 
-data/*
-policy/*
 third_party/libtorch
-!policy/model_13000.pt
-
 third_party/x30_motion_sdk

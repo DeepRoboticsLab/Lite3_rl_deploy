@@ -15,7 +15,7 @@ cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
 # -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
 # -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
 # -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
-make && cd ..
+make -j && cd ..
 ```
 
 ```bash
