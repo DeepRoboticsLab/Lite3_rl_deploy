@@ -5,9 +5,9 @@
 ```bash
 # 依赖安装 (python3.10)
 pip install pybullet "numpy < 2.0" mujoco
+git clone --recurse-submodule https://github.com/DeepRoboticsLab/Lite3_rl_deploy.git
 
 # 编译
-cd Lite3_rl_deploy
 mkdir build && cd build
 cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
 # 指令解释
