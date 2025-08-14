@@ -10,4 +10,4 @@
 [submodule "third_party/Lite3_MotionSDK"]
 	path = third_party/Lite3_MotionSDK
 	url = https://github.com/DeepRoboticsLab/Lite3_MotionSDK.git
-	branch = add_python
+	branch = main
