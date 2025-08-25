@@ -9,7 +9,7 @@ git clone --recurse-submodule https://github.com/DeepRoboticsLab/Lite3_rl_deploy
 
 # 编译
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
+cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=OFF
 # 指令解释
 # -DBUILD_PLATFORM：电脑平台，Ubuntu为x86，机器狗运动主机为arm
 # -DBUILD_SIM：是否使用仿真器，如果在实机上部署设为OFF 

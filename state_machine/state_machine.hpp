@@ -169,8 +169,8 @@ public:
         current_state_name_ = kIdle;
         next_state_name_ = kIdle;
    
-        std::cout << "Controller will be enabled in 3 seconds!!!" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(3)); //for safety 
+        // std::cout << "Controller will be enabled in 3 seconds!!!" << std::endl;
+        // std::this_thread::sleep_for(std::chrono::seconds(3)); //for safety 
 
         ri_ptr_->Start();
         std::cout << "Robot interface started" << std::endl;
@@ -190,7 +190,7 @@ public:
                 
                 if(current_controller_->LoseControlJudge()) next_state_name_ = StateName::kJointDamping;
                 else next_state_name_ = current_controller_ -> GetNextStateName();
-                std::cout << "current state:"<<current_controller_ -> state_name_ << std::endl;    
+                
                 if(next_state_name_ != current_state_name_){
                     current_controller_ -> OnExit();
                     std::cout << current_controller_ -> state_name_ << " ------------> ";

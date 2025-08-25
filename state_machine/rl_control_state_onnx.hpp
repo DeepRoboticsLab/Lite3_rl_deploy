@@ -1,9 +1,9 @@
 /**
  * @file rl_control_state_onnx.hpp
  * @brief rl policy runnning state using onnx
- * @author mayuxuan
+ * @author Bo (Percy) Peng
  * @version 1.0
- * @date 2025-05-10
+ * @date 2025-08-10
  * 
  * @copyright Copyright (c) 2025  DeepRobotics
  * 

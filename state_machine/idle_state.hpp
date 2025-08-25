@@ -22,6 +22,7 @@ private:
     Vec3f rpy_, acc_, omg_;
     double enter_state_time_ = -10000.;
 
+    float last_print_time = 0;
     void GetProprioceptiveData(){
         joint_pos_ = ri_ptr_->GetJointPosition();
         joint_vel_ = ri_ptr_->GetJointVelocity();
@@ -110,10 +111,11 @@ public:
         GetProprioceptiveData();
         joint_normal_flag_ = JointDataNormalCheck();
         imu_normal_flag_ = ImuDataNormalCheck();
-        if(first_enter_flag_ && ri_ptr_->GetInterfaceTimeStamp() - enter_state_time_ > 2.){//to confirm right state input
-            DisplayProprioceptiveInfo();
-            DisplayAxisValue();
-        }
+        if (((ri_ptr_->GetInterfaceTimeStamp() - last_print_time) > 1)) {
+                DisplayProprioceptiveInfo();
+                DisplayAxisValue();
+                last_print_time = ri_ptr_->GetInterfaceTimeStamp();
+            }
         MatXf cmd = MatXf::Zero(12, 5);
         ri_ptr_->SetJointCommand(cmd);
     }
@@ -123,7 +125,7 @@ public:
     }
 
     virtual StateName GetNextStateName() {
-        std::cout << "Current target_mode = " << uc_ptr_->GetUserCommand().target_mode << std::endl;
+        // std::cout << "Current target_mode = " << uc_ptr_->GetUserCommand().target_mode << std::endl;
 
         if(!joint_normal_flag_ || !imu_normal_flag_) {
             std::cout << "joint status: " << joint_normal_flag_ << " | imu status: " << imu_normal_flag_ << std::endl;
@@ -137,6 +139,9 @@ public:
         
         return StateName::kIdle;
     }
+
+
+    
 };
 
 

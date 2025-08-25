@@ -3,7 +3,7 @@
     <option gravity="0 0 -9.81" />
 
     <worldbody>
-        <geom name="floor" type="plane" pos="0 0 0" size="15 15 0.1" rgba="0.8 0.9 0.8 1"/>
+        <!-- <geom name="floor" type="plane" pos="0 0 0" size="15 15 0.1" rgba="0.8 0.9 0.8 1"/> -->
 
         <!-- stair  -->
         <body name="staircase" pos="0.8 0 0">

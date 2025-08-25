@@ -8,7 +8,7 @@ add_compile_options(-fPIC)
 
 # ========== 控制选项 ==========
 set(BUILD_PLATFORM "x86" CACHE STRING "select build cpu type")
-option(HIMLOCO ON)
+option(HIMLOCO OFF)
 option(BUILD SIM OFF)
 option(USE_RAISIM OFF)
 set(USE_PYBULLET ON)
@@ -139,7 +139,12 @@ file(GLOB_RECURSE RUN_POLICY_SRC "run_policy/*.cpp")
 add_executable(rl_deploy main.cpp ${STATE_MACHINE_SRC} ${RUN_POLICY_SRC})
 
 # ========== 链接基本库 ==========
-target_link_libraries(rl_deploy interface -lpthread -lm -lrt -ldl -lstdc++ onnxruntime)
+if(BUILD_SIM)
+    target_link_libraries(rl_deploy interface dw -lpthread -lpthread -lm -lrt -ldl -lstdc++ onnxruntime)
+else()
+    target_link_libraries(rl_deploy interface -lpthread -lm -lrt -ldl -lstdc++ onnxruntime)
+endif()
+
 # if (USE_ONNX)
 #   target_link_libraries(rl_deploy onnxruntime)
 #   # target_link_libraries(rl_deploy torch)

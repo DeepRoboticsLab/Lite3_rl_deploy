@@ -1,9 +1,9 @@
 /**
  * @file mujoco_interface.hpp
  * @brief simulation in mujoco
- * @author mayuxuan
+ * @author Bo (Percy) Peng
  * @version 1.0
- * @date 2025-05-08
+ * @date 2025-08-010
  * @copyright Copyright (c) 2025 DeepRobotics
  */
 
