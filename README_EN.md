@@ -42,6 +42,7 @@ tips：right click simulator window and select "always on top"
 - wasd：forward/leftward/backward/rightward
 - qe：clockwise/counter clockwise
 
+change quadruped ip: go to jy_exe/conf/network.toml, change ip to 192.168.2.1
 # Sim-to-Real
 This process is almost identical to simulation-simulation. You only need to add the step of connecting to Wi-Fi to transfer data, and then modify the compilation instructions. Currently, the default real-machine control mode is Retroid controller mode. If you need to use keyboard mode, you can change state_machine/state_machine.hpp line121 to
 ```bash
@@ -53,7 +54,6 @@ uc_ptr_ = std::make_shared<KeyboardInterface>();
 # computer and gamepad should both connect to WiFi
 # WiFi: Lite*******
 # Passward: 12345678 (If wrong, contact technical support)
-#check ip after connected to wifi (192.168.1.120/192.168.2.1)
 
 # scp to transfer files to quadruped (open a terminal on your local computer)
 scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
@@ -63,7 +63,7 @@ scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
 #ysc		' (a single quote)
 #user		123456 (Recommended)
 #firefly	firefly
-ssh user@192.168.2.1
+ssh ysc@192.168.2.1
 # enter your passward, the terminal will be active on the qurdruped computer
 
 # compile

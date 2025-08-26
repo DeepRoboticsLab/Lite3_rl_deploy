@@ -41,6 +41,8 @@ tips：可以将仿真器窗口设为始终位于最上层，方便可视化
 - wasd：前后左右
 - qe：顺逆时针旋转
 
+修改ip：进入jy_exe/conf/network.toml，修改ip为192.168.2.1
+
 # 仿真-实际
 此过程和仿真-仿真几乎一模一样，只需要添加连wifi传输数据步骤，然后修改编译指令即可。目前默认实机操控为retroid手柄模式，如需使用键盘模式，可在state_machine/state_machine.hpp中第121行更改为
 ```bash
@@ -52,7 +54,6 @@ uc_ptr_ = std::make_shared<KeyboardInterface>();
 # 电脑和手柄均连接机器狗WiFi
 # WiFi名称为 Lite*******
 # WiFi密码为 12345678 (一般为这个，如有问题联系技术支持)
-# 连上WiFi后打开设置查看ip (192.168.1.120/192.168.2.1)
 
 # scp传输文件 (打开本地电脑终端)
 scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
@@ -62,7 +63,7 @@ scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
 #ysc		' (a single quote)
 #user		123456 (推荐)
 #firefly	firefly
-ssh user@192.168.2.1
+ssh ysc@192.168.2.1
 # 输入密码后会进入远程开发模式
 
 # 编译
