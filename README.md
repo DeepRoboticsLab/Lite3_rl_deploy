@@ -14,7 +14,7 @@ cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=OFF
 # -DBUILD_PLATFORM：电脑平台，Ubuntu为x86，机器狗运动主机为arm
 # -DBUILD_SIM：是否使用仿真器，如果在实机上部署设为OFF 
 # -DHIMLOCO：支持算法，默认为rma，可选himloco
-make -j && cd ..
+make -j
 ```
 
 ```bash
@@ -28,7 +28,8 @@ cd interface/robot/simulation
 python mujoco_simulation.py
 
 # 终端2 
-./build/rl_deploy
+cd build
+./rl_deploy
 ```
 
 ### 操控(终端2)
@@ -41,7 +42,10 @@ tips：可以将仿真器窗口设为始终位于最上层，方便可视化
 - qe：顺逆时针旋转
 
 # 仿真-实际
-
+此过程和仿真-仿真几乎一模一样，只需要添加连wifi传输数据步骤，然后修改编译指令即可。目前默认实机操控为retroid手柄模式，如需使用键盘模式，可在state_machine/state_machine.hpp中第121行更改为
+```bash
+uc_ptr_ = std::make_shared<KeyboardInterface>();
+```
 ```bash
 # apply code_modification
 
@@ -69,7 +73,8 @@ cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF -DHIMLOCO=ON
 # -DBUILD_PLATFORM：电脑平台，Ubuntu为x86，机器狗运动主机为arm
 # -DBUILD_SIM：是否使用仿真器，如果在实机上部署设为OFF 
 # -DHIMLOCO：支持算法，默认为rma，可选himloco
-make -j && cd ..
+make -j 
+./rl_deploy
 ```
 
 ## 操控(手柄)

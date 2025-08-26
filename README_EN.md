@@ -15,7 +15,7 @@ cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
 # -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
 # -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
 # -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
-make -j && cd ..
+make -j
 ```
 
 ```bash
@@ -29,7 +29,8 @@ cd interface/robot/simulation
 python mujoco_simulation.py
 
 # Terminal 2 
-./build/rl_deploy
+cd build
+./rl_deploy
 ```
 
 ## Usage(Terminal 2)
@@ -42,7 +43,10 @@ tips：right click simulator window and select "always on top"
 - qe：clockwise/counter clockwise
 
 # Sim-to-Real
-
+This process is almost identical to simulation-simulation. You only need to add the step of connecting to Wi-Fi to transfer data, and then modify the compilation instructions. Currently, the default real-machine control mode is Retroid controller mode. If you need to use keyboard mode, you can change state_machine/state_machine.hpp line121 to
+```bash
+uc_ptr_ = std::make_shared<KeyboardInterface>();
+```
 ```bash
 # apply code_modification
 
@@ -70,7 +74,8 @@ cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF -DHIMLOCO=ON
 # -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
 # -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
 # -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
-make && cd ..
+make -j
+./rl_deploy
 ```
 
 ## Usage(Retroid gamepad)
