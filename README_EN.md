@@ -3,6 +3,11 @@
 ## Sim-to-Sim
 
 ```bash
+# segmentation debug tools install
+sudo apt-get install libdw-dev
+wget https://raw.githubusercontent.com/bombela/backward-cpp/master/backward.hpp
+sudo mv backward.hpp /usr/include
+
 # Dependency install (python3.10)
 pip install pybullet "numpy < 2.0" mujoco
 git clone --recurse-submodule https://github.com/DeepRoboticsLab/Lite3_rl_deploy.git
