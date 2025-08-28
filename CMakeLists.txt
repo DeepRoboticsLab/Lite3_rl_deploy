@@ -8,7 +8,6 @@ add_compile_options(-fPIC)
 
 # ========== 控制选项 ==========
 set(BUILD_PLATFORM "x86" CACHE STRING "select build cpu type")
-option(HIMLOCO OFF)
 option(BUILD SIM OFF)
 option(USE_RAISIM OFF)
 set(USE_PYBULLET ON)
@@ -74,10 +73,6 @@ if (USE_MJCPP)
   link_directories(${MUJOCO_ROOT}/lib)
 endif()
 
-if (HIMLOCO)
-  message("HIMLOCO enabled, adding HIMLOCO definitions")
-  add_definitions(-DHIMLOCO)
-endif()
 
 
 

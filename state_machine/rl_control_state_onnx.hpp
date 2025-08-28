@@ -17,11 +17,7 @@
 
 #include "state_base.h"
 #include "policy_runner_base.hpp"
-#ifdef HIMLOCO
-    #include "lite3_himloco_policy_runner_onnx.hpp"
-#else
-    #include "lite3_test_policy_runner_onnx.hpp"
-#endif
+#include "lite3_test_policy_runner_onnx.hpp"
 
 
 
@@ -32,11 +28,8 @@ private:
     int state_run_cnt_;
 
     std::shared_ptr<PolicyRunnerBase> policy_ptr_;
-    #ifdef HIMLOCO
-        std::shared_ptr<Lite3HLPolicyRunnerONNX> test_policy_;
-    #else
-        std::shared_ptr<Lite3TestPolicyRunnerONNX> test_policy_;
-    #endif
+    std::shared_ptr<Lite3TestPolicyRunnerONNX> test_policy_;
+
 
     
     std::thread run_policy_thread_;
@@ -95,21 +88,13 @@ public:
     RLControlStateONNX(const RobotType& robot_type, const std::string& state_name, 
         std::shared_ptr<ControllerData> data_ptr):StateBase(robot_type, state_name, data_ptr){
         std::memset(&rbs_, 0, sizeof(rbs_));
-            
-        #ifdef HIMLOCO
-            test_policy_ = std::make_shared<Lite3HLPolicyRunnerONNX>("test_onnx");
-        #else
-            test_policy_ = std::make_shared<Lite3TestPolicyRunnerONNX>("test_onnx");
-        #endif
-            // test_policy_ = std::make_shared<Lite3TestPolicyRunnerONNX>("test_onnx");
-            // test_policy_ = std::make_shared<Lite3HLPolicyRunnerONNX>("test_onnx");
-
-            policy_ptr_ = test_policy_;
-            if(!policy_ptr_){
-                std::cerr << "[ERROR] Failed to initialize ONNX policy runner." << std::endl;
-                exit(0);
-            }  
-            policy_ptr_->DisplayPolicyInfo();
+        test_policy_ = std::make_shared<Lite3TestPolicyRunnerONNX>("test_onnx");
+        policy_ptr_ = test_policy_;
+        if(!policy_ptr_){
+            std::cerr << "[ERROR] Failed to initialize ONNX policy runner." << std::endl;
+            exit(0);
+        }  
+        policy_ptr_->DisplayPolicyInfo();
         }
     ~RLControlStateONNX(){}
 

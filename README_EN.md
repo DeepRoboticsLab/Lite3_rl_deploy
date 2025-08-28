@@ -9,12 +9,11 @@ git clone --recurse-submodule https://github.com/DeepRoboticsLab/Lite3_rl_deploy
 
 # compile
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=ON
+cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF
 
 # Explanation
 # -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
 # -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
-# -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
 make -j
 ```
 
@@ -69,11 +68,10 @@ ssh ysc@192.168.2.1
 # compile
 cd Lite3_rl_deploy
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF -DHIMLOCO=ON
+cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF 
 # Explanation
 # -DBUILD_PLATFORM：device platform，Ubuntu is x86，quadruped is arm
 # -DBUILD_SIM：whether or not to use simulatior, if deployed on real robots, set to OFF 
-# -DHIMLOCO：supported locomotion algorithm，default is rma，you can select himloco
 make -j
 ./rl_deploy
 ```

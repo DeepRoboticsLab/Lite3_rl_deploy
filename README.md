@@ -2,18 +2,24 @@
 
 # 仿真-仿真
 
+
+
 ```bash
+# segmentation debug 工具安装
+sudo apt-get install libdw-dev
+wget https://raw.githubusercontent.com/bombela/backward-cpp/master/backward.hpp
+sudo mv backward.hpp /usr/include
+
 # 依赖安装 (python3.10)
 pip install pybullet "numpy < 2.0" mujoco
 git clone --recurse-submodule https://github.com/DeepRoboticsLab/Lite3_rl_deploy.git
 
 # 编译
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF -DHIMLOCO=OFF
+cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DSEND_REMOTE=OFF
 # 指令解释
 # -DBUILD_PLATFORM：电脑平台，Ubuntu为x86，机器狗运动主机为arm
 # -DBUILD_SIM：是否使用仿真器，如果在实机上部署设为OFF 
-# -DHIMLOCO：支持算法，默认为rma，可选himloco
 make -j
 ```
 
@@ -21,11 +27,11 @@ make -j
 # 运行 (打开两个终端)
 # 终端1 (pybullet)
 cd interface/robot/simulation
-python pybullet_simulation.py
+python3 pybullet_simulation.py
 
 # 终端1 (mujoco)
 cd interface/robot/simulation
-python mujoco_simulation.py
+python3 mujoco_simulation.py
 
 # 终端2 
 cd build
@@ -69,11 +75,10 @@ ssh ysc@192.168.2.1
 # 编译
 cd Lite3_rl_deploy
 mkdir build && cd build
-cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF -DHIMLOCO=ON
+cmake .. -DBUILD_PLATFORM=arm -DBUILD_SIM=OFF -DSEND_REMOTE=OFF
 # 指令解释
 # -DBUILD_PLATFORM：电脑平台，Ubuntu为x86，机器狗运动主机为arm
 # -DBUILD_SIM：是否使用仿真器，如果在实机上部署设为OFF 
-# -DHIMLOCO：支持算法，默认为rma，可选himloco
 make -j 
 ./rl_deploy
 ```
