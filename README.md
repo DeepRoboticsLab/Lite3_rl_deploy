@@ -1,6 +1,6 @@
 [English](./README_EN.md)
 
-[![Discord](https://img.shields.io/badge/-Discord-5865F2?style=flat&logo=Discord&logoColor=white)](https://discord.gg/KRAnmSnFW3)
+[![Discord](https://img.shields.io/badge/-Discord-5865F2?style=flat&logo=Discord&logoColor=white)](https://discord.gg/gdM9mQutC8)
 
 ## Tutorial Video
 欢迎观看教程视频，学习如何训练和部署强化学习策略:  
