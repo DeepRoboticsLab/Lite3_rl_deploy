@@ -1,5 +1,5 @@
 /**
- * @file pybullet_interface.hpp
+ * @file simulation_interface.hpp
  * @brief communicate with pybullet
  * @author mazunwang
  * @version 1.0
@@ -9,8 +9,7 @@
  * 
  */
 
-#ifndef PYBULLET_SIMULATION_HPP_
-#define PYBULLET_SIMULATION_HPP_
+#pragma once
 
 #include "robot_interface.h"
 #include <iostream>
@@ -236,6 +235,3 @@ namespace interface{
     };
 
 };
-
-
-#endif

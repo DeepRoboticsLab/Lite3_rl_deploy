@@ -31,14 +31,14 @@
     #include "simulation/jueying_raisim_simulation.hpp"
 #endif
 #ifdef USE_PYBULLET
-    #include "simulation/pybullet_interface.hpp"
+    #include "simulation/simulation_interface.hpp"
 #endif
 
 #ifdef USE_MJCPP
     #include "simulation/mujoco_interface.hpp"
 #endif
 
-#include "hardware/lite3_hardware_interface.hpp"
+#include "hardware/hardware_interface.hpp"
 #include "data_streaming.hpp"
 
 class StateMachine{

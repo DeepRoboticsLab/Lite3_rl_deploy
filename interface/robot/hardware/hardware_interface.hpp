@@ -1,6 +1,4 @@
-#ifndef LITE3_HARDWARE_INTERFACE_HPP_
-#define LITE3_HARDWARE_INTERFACE_HPP_
-
+#pragma once
 #include "robot_interface.h"
 // #include "lite3_types.h"
 # include "robot_types.h"
@@ -107,5 +105,3 @@ public:
 };
 
 
-
-#endif
