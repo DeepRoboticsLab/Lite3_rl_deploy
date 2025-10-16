@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef STATE_BASE_H_
-#define STATE_BASE_H_
+#pragma once
 
 #include "common_types.h"
 #include "custom_types.h"
@@ -95,7 +94,3 @@ public:
 
     static MotionStateFeedback msfb_;               //robot current motion state
 };
-
-
-
-#endif

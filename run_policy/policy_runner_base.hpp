@@ -9,9 +9,7 @@
  * 
  */
 
-#ifndef POLICY_RUNNER_BASE_HPP_
-#define POLICY_RUNNER_BASE_HPP_
-
+#pragma once
 
 #include "common_types.h"
 
@@ -52,8 +50,3 @@ public:
 };
 
 
-
-
-
-
-#endif

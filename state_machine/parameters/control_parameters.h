@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef CONTROL_PARAMETERS_HPP_
-#define CONTROL_PARAMETERS_HPP_
+#pragma once
 
 #include "common_types.h"
 #include "custom_types.h"
@@ -78,7 +77,3 @@ public:
     // std::string tumbler_policy_path_;
     // Vec3f tumbler_policy_p_gain_, tumbler_policy_d_gain_;
 };
-
-
-
-#endif

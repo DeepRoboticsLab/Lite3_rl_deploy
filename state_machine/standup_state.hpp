@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef STANDUP_STATE_HPP_
-#define STANDUP_STATE_HPP_
+#pragma once
 
 #include "state_base.h"
 
@@ -149,7 +148,3 @@ public:
         return StateName::kStandUp;
     }
 };
-
-
-
-#endif

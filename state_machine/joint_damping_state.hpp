@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef JOINT_DAMPING_STATE_HPP_
-#define JOINT_DAMPING_STATE_HPP_
+#pragma once
 
 #include "state_base.h"
 
@@ -49,8 +48,3 @@ public:
     }
 };
 
-
-
-
-
-#endif

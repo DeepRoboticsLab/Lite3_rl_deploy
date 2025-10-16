@@ -1,5 +1,4 @@
-#ifndef RETROID_GAMEPAD_INTERFACE_HPP_
-#define RETROID_GAMEPAD_INTERFACE_HPP_
+#pragma once
 
 #include "retroid_gamepad.h"
 #include "user_command_interface.h"
@@ -103,6 +102,3 @@ void RetroidGamepadInterface::TransformRetroidToUserCommand(){
 }
 
 
-
-
-#endif
