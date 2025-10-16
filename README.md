@@ -8,7 +8,7 @@
 - [Quadruped Robot Control | From Beginner to Pro Episode 1](https://youtu.be/adrdWCOHzC8?si=sAfsiPRhBu3kEJWo) (YouTube)
 
 # 仿真-仿真
-
+```bash
 # segmentation debug 工具安装
 sudo apt-get install libdw-dev
 wget https://raw.githubusercontent.com/bombela/backward-cpp/master/backward.hpp
