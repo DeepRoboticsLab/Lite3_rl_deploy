@@ -3,9 +3,7 @@
 [![Discord](https://img.shields.io/badge/-Discord-5865F2?style=flat&logo=Discord&logoColor=white)](https://discord.gg/gdM9mQutC8)
 
 ## Tutorial Video
-欢迎观看教程视频，学习如何训练和部署强化学习策略:  
-- [【四足运控，从入门到精通】第一期 | 从头训练测试部署一个强化学习策略](https://www.bilibili.com/video/BV1xKabz9E2d/?share_source=copy_web&vd_source=57f46145c37bfb96f7583c9e02081590) (Bilibili)  
-- [Quadruped Robot Control | From Beginner to Pro Episode 1](https://youtu.be/adrdWCOHzC8?si=sAfsiPRhBu3kEJWo) (YouTube)
+欢迎在[Bilibili](https://b23.tv/UoIqsFn)或者[YouTube](https://youtube.com/playlist?list=PLy9YHJvMnjO0X4tx_NTWugTUMJXUrOgFH&si=pjUGF5PbFf3tGLFz)观看教程视频，学习如何训练和部署强化学习策略。
 
 # 仿真-仿真
 ```bash
