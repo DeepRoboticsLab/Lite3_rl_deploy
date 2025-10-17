@@ -22,7 +22,7 @@
 
 
 namespace interface{
-    class PybulletInterface : public RobotInterface{
+    class SimulationInterface : public RobotInterface{
         private:
             double run_time_=0;
             Vec3f omega_body_, rpy_, acc_;
@@ -30,14 +30,14 @@ namespace interface{
             bool start_thread_flag_ = false;
             std::thread sim_thread_, send_thread_;
         public:
-        PybulletInterface(const std::string& name, int dof_num=12):RobotInterface(name, dof_num){
+        SimulationInterface(const std::string& name, int dof_num=12):RobotInterface(name, dof_num){
             joint_pos_ = VecXf::Zero(dof_num_);
             joint_tau_ = VecXf::Zero(dof_num_);
             joint_vel_ = VecXf::Zero(dof_num_);
 
             joint_cmd_ = MatXf::Zero(dof_num_, 5);
 
-            std::cout << robot_name_ << " is using pybullet simulation \n";
+            std::cout << robot_name_ << " is using simulation \n";
         }
         virtual double GetInterfaceTimeStamp(){
             return run_time_;
@@ -69,8 +69,8 @@ namespace interface{
 
         virtual void Start(){
             start_thread_flag_ = true;
-            sim_thread_ = std::thread(std::bind(&PybulletInterface::ReceiveRobotData, this));
-            send_thread_ = std::thread(std::bind(&PybulletInterface::SendJointCmd, this));
+            sim_thread_ = std::thread(std::bind(&SimulationInterface::ReceiveRobotData, this));
+            send_thread_ = std::thread(std::bind(&SimulationInterface::SendJointCmd, this));
         }
 
         virtual void Stop(){

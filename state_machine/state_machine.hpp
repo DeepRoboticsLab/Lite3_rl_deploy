@@ -132,9 +132,9 @@ public:
                 std::cout << "Using MujocoInterface CPP " << std::endl;
                 std::cout << "mjcf_path: " << mjcf_path << std::endl;
             #elif defined(USE_PYBULLET)
-                ri_ptr_ = std::make_shared<PybulletInterface>("Lite3");
+                ri_ptr_ = std::make_shared<SimulationInterface>("Lite3");
             #else
-                ri_ptr_ = std::make_shared<Lite3HardwareInterface>("Lite3");
+                ri_ptr_ = std::make_shared<HardwareInterface>("Lite3");
             #endif
             cp_ptr_ = std::make_shared<ControlParameters>(robot_type);
         }else{
