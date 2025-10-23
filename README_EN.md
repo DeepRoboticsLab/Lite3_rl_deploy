@@ -52,11 +52,21 @@ tips：right click simulator window and select "always on top"
 - wasd：forward/leftward/backward/rightward
 - qe：clockwise/counter clockwise
 
-change quadruped ip: go to jy_exe/conf/network.toml, change ip to 192.168.2.1
+
+
 # Sim-to-Real
 This process is almost identical to simulation-simulation. You only need to add the step of connecting to Wi-Fi to transfer data, and then modify the compilation instructions. Currently, the default real-machine control mode is Retroid controller mode. If you need to use keyboard mode, you can change state_machine/state_machine.hpp line121 to
 ```bash
 uc_ptr_ = std::make_shared<KeyboardInterface>();
+```
+modify this file jy_exe/conf/network.toml to this content:
+```bash
+ip = '192.168.2.1'
+target_port = 43897
+local_port = 43893
+
+ips = ['192.168.1.103']
+ports = [43894]
 ```
 ```bash
 # apply code_modification

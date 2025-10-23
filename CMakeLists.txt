@@ -8,7 +8,7 @@ add_compile_options(-fPIC)
 
 # ========== 控制选项 ==========
 set(BUILD_PLATFORM "x86" CACHE STRING "select build cpu type")
-option(BUILD SIM OFF)
+option(BUILD_SIM OFF)
 option(USE_RAISIM OFF)
 set(USE_PYBULLET ON)
 set(USE_RAISIM OFF)
