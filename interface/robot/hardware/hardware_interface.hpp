@@ -1,15 +1,12 @@
-#ifndef LITE3_HARDWARE_INTERFACE_HPP_
-#define LITE3_HARDWARE_INTERFACE_HPP_
-
+#pragma once
 #include "robot_interface.h"
-// #include "lite3_types.h"
 # include "robot_types.h"
 #include "receiver.h"
 #include "sender.h"
 
 // using namespace lite3;
 
-class Lite3HardwareInterface : public RobotInterface
+class HardwareInterface : public RobotInterface
 {
 private:
     RobotData* robot_data_=nullptr;
@@ -21,7 +18,7 @@ private:
     VecXf joint_pos_, joint_vel_, joint_tau_;
     std::thread hw_thread_;
 public:
-    Lite3HardwareInterface(const std::string& robot_name, 
+    HardwareInterface(const std::string& robot_name, 
                         int local_port=43897, 
                         std::string robot_ip="192.168.2.1",
                         int robot_port=43893):RobotInterface(robot_name, 12){
@@ -31,7 +28,7 @@ public:
         sender_ = new Sender(robot_ip, robot_port);
         sender_->RobotStateInit();
     }
-    ~Lite3HardwareInterface(){}
+    ~HardwareInterface(){}
 
     virtual void Start(){
         receiver_->StartWork();                        
@@ -107,5 +104,3 @@ public:
 };
 
 
-
-#endif

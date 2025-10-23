@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef STATE_MACHINE_HPP_
-#define STATE_MACHINE_HPP_
+#pragma once
 
 #include "state_base.h"
 #include "idle_state.hpp"
@@ -31,14 +30,14 @@
     #include "simulation/jueying_raisim_simulation.hpp"
 #endif
 #ifdef USE_PYBULLET
-    #include "simulation/pybullet_interface.hpp"
+    #include "simulation/simulation_interface.hpp"
 #endif
 
 #ifdef USE_MJCPP
     #include "simulation/mujoco_interface.hpp"
 #endif
 
-#include "hardware/lite3_hardware_interface.hpp"
+#include "hardware/hardware_interface.hpp"
 #include "data_streaming.hpp"
 
 class StateMachine{
@@ -133,9 +132,9 @@ public:
                 std::cout << "Using MujocoInterface CPP " << std::endl;
                 std::cout << "mjcf_path: " << mjcf_path << std::endl;
             #elif defined(USE_PYBULLET)
-                ri_ptr_ = std::make_shared<PybulletInterface>("Lite3");
+                ri_ptr_ = std::make_shared<SimulationInterface>("Lite3");
             #else
-                ri_ptr_ = std::make_shared<Lite3HardwareInterface>("Lite3");
+                ri_ptr_ = std::make_shared<HardwareInterface>("Lite3");
             #endif
             cp_ptr_ = std::make_shared<ControlParameters>(robot_type);
         }else{
@@ -210,5 +209,3 @@ public:
     }
 
 };
-
-#endif

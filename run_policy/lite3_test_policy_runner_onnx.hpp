@@ -11,8 +11,7 @@
 
 
 
-#ifndef LITE3_TEST_POLICY_RUNNER_ONNX_HPP_
-#define LITE3_TEST_POLICY_RUNNER_ONNX_HPP_
+#pragma once
 
 
 #include "policy_runner_base.hpp"
@@ -260,4 +259,3 @@ public:
     }
 };
 
-#endif  // LITE3_TEST_POLICY_RUNNER_ONNX_HPP_

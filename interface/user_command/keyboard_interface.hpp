@@ -1,5 +1,4 @@
-#ifndef KEYBOARD_INTERFACE_HPP_
-#define KEYBOARD_INTERFACE_HPP_
+#pragma once
 
 #include "user_command_interface.h"
 #include "custom_types.h"
@@ -148,6 +147,3 @@ public:
 };
 
 
-
-
-#endif

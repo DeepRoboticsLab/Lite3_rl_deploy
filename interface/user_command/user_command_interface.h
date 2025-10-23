@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef USER_COMMAND_INTERFACE_H_
-#define USER_COMMAND_INTERFACE_H_
+#pragma once
 
 #include "common_types.h"
 #include "custom_types.h"
@@ -50,5 +49,3 @@ public:
     MotionStateFeedback msfb_;
 };
 };
-
-#endif

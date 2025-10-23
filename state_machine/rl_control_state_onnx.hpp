@@ -12,8 +12,7 @@
 
 
 
-#ifndef RL_CONTROL_STATE_ONNX_HPP_
-#define RL_CONTROL_STATE_ONNX_HPP_
+#pragma once
 
 #include "state_base.h"
 #include "policy_runner_base.hpp"
@@ -139,4 +138,3 @@ public:
 };
 
 
-#endif  // RL_CONTROL_STATE_ONNX_HPP_

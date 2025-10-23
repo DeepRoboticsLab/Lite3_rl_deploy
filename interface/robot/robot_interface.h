@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef ROBOT_INTERFACE_H_
-#define ROBOT_INTERFACE_H_
+#pragma once
 
 #include "common_types.h"
 #include <atomic>
@@ -124,5 +123,3 @@ public:
 
 
 };//namespace interface
-
-#endif

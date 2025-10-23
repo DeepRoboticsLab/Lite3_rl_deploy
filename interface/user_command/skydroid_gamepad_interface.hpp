@@ -1,5 +1,4 @@
-#ifndef SKYDROID_GAMEPAD_INTERFACE_HPP_
-#define SKYDROID_GAMEPAD_INTERFACE_HPP_
+#pragma once
 
 #include "user_command_interface.h"
 #include "skydroid_gamepad.h"
@@ -124,4 +123,3 @@ UserCommand SkydroidGamepadInterface::GetUserCommand(){
 // bool SkydroidGamepadInterface::IsKeysEqual(const SkydroidKeys& a, const SkydroidKeys& b)
 
 // void SkydroidGamepadInterface::PrintGamepadData(SkydroidKeys *data)
-#endif

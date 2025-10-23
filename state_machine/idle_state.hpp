@@ -8,8 +8,7 @@
  * @copyright Copyright (c) 2024  DeepRobotics
  * 
  */
-#ifndef IDLE_STATE_HPP_
-#define IDLE_STATE_HPP_
+#pragma once
 
 
 #include "state_base.h"
@@ -143,8 +142,3 @@ public:
 
     
 };
-
-
-
-
-#endif
