@@ -15,6 +15,8 @@ set(USE_RAISIM OFF)
 option(SEND_REMOTE OFF)
 # option(USE_ONNX "Use ONNXRuntime" ON)
 option(USE_MJCPP "Use Mujoco C++" OFF)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+option(BUILD_LITE3_API "Build Lite3 API wrapper library" ON)
 
 
 
@@ -38,6 +40,8 @@ message("BUILD_SIM:      ${BUILD_SIM}")
 message("SEND_REMOTE:    ${SEND_REMOTE}")
 # message("USE_ONNX:       ${USE_ONNX}")
 message("USE_MJCPP:      ${USE_MJCPP}")
+message("BUILD_LITE3_API: ${BUILD_LITE3_API}")
+message("BUILD_PYTHON_BINDINGS: ${BUILD_PYTHON_BINDINGS}")
 
 # 路径设置
 get_filename_component(WORKSPACE_DIR ./ ABSOLUTE)
@@ -96,7 +100,7 @@ include_directories(
 
 # ========== 添加 interface 子模块 ==========
 add_subdirectory(interface)
-
+# add_subdirectory(lite3_api)
 # ========== 仿真器宏定义 ==========
 if (BUILD_SIM)
 message("USE_PYBULLET:    ${USE_PYBULLET}")
@@ -207,4 +211,103 @@ if (SEND_REMOTE)
     WORKING_DIRECTORY ..
     COMMENT "run sftp_to_remote.sh"
   )
+endif()
+
+# ========== Lite3 API Wrapper Library ==========
+if (BUILD_LITE3_API)
+  message("Building Lite3 API wrapper library")
+
+  # Include directories for API
+  include_directories(lite3_api/include)
+
+  # Collect source files
+  file(GLOB LITE3_API_SRC "lite3_api/src/*.cpp")
+
+  # Build shared library
+  add_library(lite3_api SHARED ${LITE3_API_SRC})
+
+  # Link dependencies
+  if(BUILD_SIM)
+    target_link_libraries(lite3_api
+      interface
+      dw
+      -lpthread
+      -lm
+      -lrt
+      -ldl
+      -lstdc++
+      onnxruntime
+      ${PROJECT_SOURCE_DIR}/third_party/Lite3_MotionSDK/lib/libdeeprobotics_legged_sdk_x86_64.so
+    )
+  else()
+    target_link_libraries(lite3_api
+      interface
+      -lpthread
+      -lm
+      -lrt
+      -ldl
+      -lstdc++
+      onnxruntime
+      ${PROJECT_SOURCE_DIR}/third_party/Lite3_MotionSDK/lib/libdeeprobotics_legged_sdk_aarch64.so
+    )
+  endif()
+
+  # Add compile definitions
+  if (BUILD_SIM)
+    target_compile_definitions(lite3_api PRIVATE BUILD_SIMULATION)
+  endif()
+
+  # Build tests
+  add_executable(test_lite3_controller lite3_api/tests/test_controller.cpp)
+  target_link_libraries(test_lite3_controller lite3_api)
+
+  if(BUILD_SIM)
+    target_link_libraries(test_lite3_controller
+      ${PROJECT_SOURCE_DIR}/third_party/Lite3_MotionSDK/lib/libdeeprobotics_legged_sdk_x86_64.so
+    )
+  else()
+    target_link_libraries(test_lite3_controller
+      ${PROJECT_SOURCE_DIR}/third_party/Lite3_MotionSDK/lib/libdeeprobotics_legged_sdk_aarch64.so
+    )
+  endif()
+
+  # Build examples
+  add_executable(simple_example lite3_api/examples/simple_example.cpp)
+  target_link_libraries(simple_example lite3_api)
+
+  if(BUILD_SIM)
+    target_link_libraries(simple_example
+      ${PROJECT_SOURCE_DIR}/third_party/Lite3_MotionSDK/lib/libdeeprobotics_legged_sdk_x86_64.so
+    )
+  else()
+    target_link_libraries(simple_example
+      ${PROJECT_SOURCE_DIR}/third_party/Lite3_MotionSDK/lib/libdeeprobotics_legged_sdk_aarch64.so
+    )
+  endif()
+
+endif()
+
+# ========== Python Bindings ==========
+if (BUILD_PYTHON_BINDINGS AND BUILD_LITE3_API)
+  message("Building Python bindings with pybind11")
+
+  # Find pybind11
+  find_package(pybind11 QUIET)
+
+  if (pybind11_FOUND)
+    message("pybind11 found, building Python module")
+
+    # Build Python module
+    pybind11_add_module(pylite3 lite3_api/python/python_bindings.cpp)
+    target_link_libraries(pylite3 PRIVATE lite3_api)
+
+    # Set output directory
+    set_target_properties(pylite3 PROPERTIES
+      LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/python_package/pylite3
+    )
+
+  else()
+    message(WARNING "pybind11 not found. Python bindings will not be built.")
+    message(WARNING "Install with: pip install pybind11")
+  endif()
 endif()

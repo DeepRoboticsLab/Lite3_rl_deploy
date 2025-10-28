@@ -5,7 +5,7 @@
 #include "sender.h"
 
 // using namespace lite3;
-
+using namespace interface;
 class HardwareInterface : public RobotInterface
 {
 private:
@@ -102,5 +102,3 @@ public:
         sender_->SendCmd(robot_joint_cmd_);
     }
 };
-
-
