@@ -130,7 +130,7 @@ public:
 
         joint_cmd_.col(1) = planning_joint_pos;
         joint_cmd_.col(3) = planning_joint_vel;
-        ri_ptr_->SetJointCommand(joint_cmd_);
+        ri_ptr_->SetJointCommand(joint_cmd_); // (current torque, not last torque, video content slip of the tongue)
     }
     virtual bool LoseControlJudge() {
         if(uc_ptr_->GetUserCommand().target_mode == int(RobotMotionState::JointDamping)) return true;

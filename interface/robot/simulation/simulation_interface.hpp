@@ -64,6 +64,7 @@ namespace interface{
             return VecXf::Zero(4);
         }
         virtual void SetJointCommand(Eigen::Matrix<float, Eigen::Dynamic, 5> input){
+            // (current torque, not last torque, video content slip of the tongue)
             joint_cmd_ = input;
         }
 

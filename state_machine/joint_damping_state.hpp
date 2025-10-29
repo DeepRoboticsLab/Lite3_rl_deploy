@@ -35,7 +35,7 @@ public:
     }
     virtual void Run() {
         run_time_ = ri_ptr_->GetInterfaceTimeStamp();
-        ri_ptr_->SetJointCommand(joint_cmd_);
+        ri_ptr_->SetJointCommand(joint_cmd_); // (current torque, not last torque, video content slip of the tongue)
     }
     virtual bool LoseControlJudge() {
         return false;

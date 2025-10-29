@@ -96,7 +96,7 @@ public:
             robot_joint_cmd_.joint_cmd[i].position = input(i, 1);
             robot_joint_cmd_.joint_cmd[i].kd       = input(i, 2);
             robot_joint_cmd_.joint_cmd[i].velocity = input(i, 3);
-            robot_joint_cmd_.joint_cmd[i].torque   = input(i, 4);
+            robot_joint_cmd_.joint_cmd[i].torque   = input(i, 4); // (current torque, not last torque, video content slip of the tongue)
         }
         joint_cmd_ = input;
         sender_->SendCmd(robot_joint_cmd_);

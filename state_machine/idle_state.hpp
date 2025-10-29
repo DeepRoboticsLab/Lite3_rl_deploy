@@ -116,7 +116,7 @@ public:
                 last_print_time = ri_ptr_->GetInterfaceTimeStamp();
             }
         MatXf cmd = MatXf::Zero(12, 5);
-        ri_ptr_->SetJointCommand(cmd);
+        ri_ptr_->SetJointCommand(cmd); // (current torque, not last torque, video content slip of the tongue)
     }
 
     virtual bool LoseControlJudge() {
