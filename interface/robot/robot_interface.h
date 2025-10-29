@@ -90,7 +90,8 @@ public:
     /**
      * @brief Set the joint command in standard form
      *                  torque = kp * (qDes - q) + kd * (vDes - v) + tff
-     * @param  input       a dof_num*5 matrix and each column represent kp, goal_angle_pos, kd, goal_vel, torque_feedforward
+     * @param  input       a dof_num*5 matrix and each column represent kp, goal_angle_pos, kd, goal_vel, torque_feedforward 
+     * (current torque, not last torque, video content slip of the tongue)
      */
     virtual void SetJointCommand(Eigen::Matrix<float, Eigen::Dynamic, 5> input) = 0;
 

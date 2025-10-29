@@ -72,7 +72,7 @@ private:
                 clock_gettime(CLOCK_MONOTONIC,&start_timestamp);
                 auto ra = policy_ptr_->GetRobotAction(rbs_);
                 MatXf res = ra.ConvertToMat();
-                ri_ptr_->SetJointCommand(res);
+                ri_ptr_->SetJointCommand(res); // (current torque, not last torque, video content slip of the tongue)
                 run_cnt_record = state_run_cnt_;
                 clock_gettime(CLOCK_MONOTONIC,&end_timestamp);
                 policy_cost_time_ = (end_timestamp.tv_sec-start_timestamp.tv_sec)*1e3 
