@@ -65,7 +65,7 @@ target_port = 43897
 local_port = 43893
 
 ips = ['192.168.1.103']
-ports = [43894]
+ports = [43897]
 ```
 ```bash
 # apply code_modification
