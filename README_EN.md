@@ -1,10 +1,9 @@
 [简体中文](./README.md)
 
 [![Discord](https://img.shields.io/badge/-Discord-5865F2?style=flat&logo=Discord&logoColor=white)](https://discord.gg/gdM9mQutC8)
+
 ## Tutorial Videos
-We've released the following tutorials for training and deploying a reinforcement learning policy. Please check it out! 
-- [【四足运控，从入门到精通】第一期 | 从头训练测试部署一个强化学习策略](https://www.bilibili.com/video/BV1xKabz9E2d/?share_source=copy_web&vd_source=57f46145c37bfb96f7583c9e02081590) (Bilibili)  
-- [Quadruped Robot Control | From Beginner to Pro Episode 1](https://youtu.be/adrdWCOHzC8?si=sAfsiPRhBu3kEJWo) (YouTube)
+We've released the following tutorials for training and deploying a reinforcement learning policy. Please check it out on [Bilibili](https://b23.tv/UoIqsFn) or [YouTube](https://youtube.com/playlist?list=PLy9YHJvMnjO0X4tx_NTWugTUMJXUrOgFH&si=pjUGF5PbFf3tGLFz)! 
 
 ## Sim-to-Sim
 
@@ -52,11 +51,21 @@ tips：right click simulator window and select "always on top"
 - wasd：forward/leftward/backward/rightward
 - qe：clockwise/counter clockwise
 
-change quadruped ip: go to jy_exe/conf/network.toml, change ip to 192.168.2.1
+
+
 # Sim-to-Real
 This process is almost identical to simulation-simulation. You only need to add the step of connecting to Wi-Fi to transfer data, and then modify the compilation instructions. Currently, the default real-machine control mode is Retroid controller mode. If you need to use keyboard mode, you can change state_machine/state_machine.hpp line121 to
 ```bash
 uc_ptr_ = std::make_shared<KeyboardInterface>();
+```
+modify this file jy_exe/conf/network.toml to this content:
+```bash
+ip = '192.168.2.1'
+target_port = 43897
+local_port = 43893
+
+ips = ['192.168.1.103']
+ports = [43897]
 ```
 ```bash
 # apply code_modification
