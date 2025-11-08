@@ -49,12 +49,20 @@ tips：可以将仿真器窗口设为始终位于最上层，方便可视化
 - wasd：前后左右
 - qe：顺逆时针旋转
 
-修改ip：进入jy_exe/conf/network.toml，修改ip为192.168.2.1
 
 # 仿真-实际
 此过程和仿真-仿真几乎一模一样，只需要添加连wifi传输数据步骤，然后修改编译指令即可。目前默认实机操控为retroid手柄模式，如需使用键盘模式，可在state_machine/state_machine.hpp中第121行更改为
 ```bash
 uc_ptr_ = std::make_shared<KeyboardInterface>();
+```
+修改ip：进入jy_exe/conf/network.toml，修改ip为以下内容
+```bash
+ip = '192.168.2.1'
+target_port = 43897
+local_port = 43893
+
+ips = ['192.168.1.103']
+ports = [43897]
 ```
 ```bash
 # apply code_modification
