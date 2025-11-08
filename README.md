@@ -65,8 +65,6 @@ ips = ['192.168.1.103']
 ports = [43897]
 ```
 ```bash
-# apply code_modification
-
 # 电脑和手柄均连接机器狗WiFi
 # WiFi名称为 Lite*******
 # WiFi密码为 12345678 (一般为这个，如有问题联系技术支持)
