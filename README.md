@@ -72,11 +72,9 @@ ports = [43897]
 # scp传输文件 (打开本地电脑终端)
 scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
 
-# ssh连接机器狗运动主机以远程开发，密码有以下三种组合
+# ssh连接机器狗运动主机以远程开发
 #Username	Password
 #ysc		' (a single quote)
-#user		123456 (推荐)
-#firefly	firefly
 ssh ysc@192.168.2.1
 # 输入密码后会进入远程开发模式
 

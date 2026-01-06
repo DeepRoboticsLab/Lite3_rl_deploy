@@ -77,11 +77,9 @@ ports = [43897]
 # scp to transfer files to quadruped (open a terminal on your local computer)
 scp -r ~/Lite3_rl_deploy ysc@192.168.2.1:~/
 
-# ssh connect for remote development, the passward has the following 3 combinations
-#Username	Password
-#ysc		' (a single quote)
-#user		123456 (Recommended)
-#firefly	firefly
+# ssh connect for remote development
+# Username	Password
+# ysc		' (a single quote)
 ssh ysc@192.168.2.1
 # enter your passward, the terminal will be active on the qurdruped computer
 
