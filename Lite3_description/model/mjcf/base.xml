@@ -1,0 +1,9 @@
+<mujoco model="M20_Base">
+
+    <compiler meshdir="meshes" texturedir="meshes"/>
+
+    <include file="M20.xml"/>
+    <include file="scene.xml"/>
+
+    <option gravity="0 0 -9.81"/>
+</mujoco>
