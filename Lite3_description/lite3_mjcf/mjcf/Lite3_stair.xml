@@ -1,4 +1,5 @@
 <mujoco model="Lite3_stair">
     <include file="../../../third_party/deep_robotics_model/Lite3/Lite3_mjcf/mjcf/Lite3.xml"/>
     <include file="./scene.xml"/>
+    <include file="./stair.xml"/>
 </mujoco>
