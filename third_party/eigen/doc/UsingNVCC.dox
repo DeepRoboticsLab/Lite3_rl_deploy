@@ -1,0 +1,39 @@
+
+namespace Eigen {
+
+/** \page TopicCUDA Using Eigen in CUDA kernels
+
+\section TopicCUDA_Overview Overview
+
+%Eigen's fixed-size matrices, vectors, and arrays can be used inside CUDA and HIP kernels.
+This is especially useful when working on numerous but small problems.
+By default, when %Eigen's headers are included within a \c .cu file compiled by \c nvcc,
+most of %Eigen's functions and methods are prefixed by the \c __device__ \c __host__ keywords
+making them callable from both host and device code.
+
+This support can be disabled by defining \c EIGEN_NO_CUDA (or \c EIGEN_NO_HIP for HIP)
+before including any %Eigen header.
+This might be useful to disable some warnings when a \c .cu file makes use of %Eigen on the host side only.
+
+\warning Host SIMD vectorization must be disabled in \c .cu files. It is \b strongly
+\b recommended to move all costly host-side computation from \c .cu files to regular \c .cpp files.
+
+\section TopicCUDA_HIP HIP support
+
+%Eigen also supports AMD's HIP compiler (\c hipcc). The same \c EIGEN_DEVICE_FUNC mechanism applies:
+functions are annotated with \c __device__ \c __host__ when compiling with HIP.
+Define \c EIGEN_NO_HIP to disable this. Internally, both CUDA and HIP are unified under the
+\c EIGEN_GPUCC macro.
+
+\section TopicCUDA_KnownIssues Known issues
+
+ - On 64-bit systems %Eigen uses \c long \c int as the default type for indexes and sizes.
+   On CUDA/HIP devices, it would make sense to default to 32-bit \c int.
+   However, to keep host and device code compatible, this cannot be done automatically by %Eigen,
+   and the user is thus required to define \c EIGEN_DEFAULT_DENSE_INDEX_TYPE to \c int throughout
+   their code (or only for device code if there is no interaction between host and device code
+   through %Eigen's objects).
+
+*/
+
+}

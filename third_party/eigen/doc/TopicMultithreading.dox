@@ -1,0 +1,60 @@
+namespace Eigen {
+
+/** \page TopicMultiThreading Eigen and multi-threading
+
+\section TopicMultiThreading_MakingEigenMT Make Eigen run in parallel
+
+Some of %Eigen's algorithms can exploit the multiple cores present in your hardware.
+The primary mechanism is OpenMP. To enable it, pass the appropriate flag to your compiler:
+ - GCC/Clang: \c -fopenmp
+ - MSVC: \c /openmp (or check the respective option in the build properties)
+
+You can control the number of threads that will be used using either the OpenMP API or %Eigen's API using the following priority:
+\code
+ OMP_NUM_THREADS=n ./my_program
+ omp_set_num_threads(n);
+ Eigen::setNbThreads(n);
+\endcode
+Unless `setNbThreads` has been called, %Eigen uses the number of threads specified by OpenMP.
+You can restore this behavior by calling `setNbThreads(0);`.
+You can query the number of threads that will be used with:
+\code
+n = Eigen::nbThreads( );
+\endcode
+You can disable %Eigen's multi threading at compile time by defining the \link TopicPreprocessorDirectivesPerformance EIGEN_DONT_PARALLELIZE \endlink preprocessor token.
+
+\subsection TopicMultiThreading_ThreadPool Alternative: ThreadPool backend
+
+As an alternative to OpenMP, %Eigen supports a custom thread pool backend for GEMM operations.
+Define \c EIGEN_GEMM_THREADPOOL and use \c Eigen::setGemmThreadPool(Eigen::ThreadPool*) to
+provide a thread pool. OpenMP and \c EIGEN_GEMM_THREADPOOL are mutually exclusive.
+
+\subsection TopicMultiThreading_ParallelOps Parallelized operations
+
+Currently, the following algorithms can make use of multi-threading:
+ - general dense matrix - matrix products
+ - PartialPivLU
+ - row-major-sparse * dense vector/matrix products
+ - ConjugateGradient with \c Lower|Upper as the \c UpLo template parameter.
+ - BiCGSTAB with a row-major sparse matrix format.
+ - LeastSquaresConjugateGradient
+
+\warning On most OS it is <strong>very important</strong> to limit the number of threads to the number of physical cores, otherwise significant slowdowns are expected, especially for operations involving dense matrices.
+
+Indeed, the principle of hyper-threading is to run multiple threads (in most cases 2) on a single core in an interleaved manner.
+However, %Eigen's matrix-matrix product kernel is fully optimized and already exploits nearly 100% of the CPU capacity.
+Consequently, there is no room for running multiple such threads on a single core, and the performance would drop significantly because of cache pollution and other sources of overhead.
+At this stage of reading you're probably wondering why %Eigen does not limit itself to the number of physical cores?
+This is simply because OpenMP does not allow to know the number of physical cores, and thus %Eigen will launch as many threads as <i>cores</i> reported by OpenMP.
+
+\section TopicMultiThreading_UsingEigenWithMT Using Eigen in a multi-threaded application
+
+\warning Note that all functions generating random matrices are \b not re-entrant nor thread-safe. Those include DenseBase::Random(), and DenseBase::setRandom(). This is because these functions are based on \c std::rand which is not re-entrant.
+For thread-safe random generation, we recommend the use of C++11 random generators (\link DenseBase::NullaryExpr(Index, const CustomNullaryOp&) example \endlink).
+
+In the case your application is parallelized with OpenMP, you might want to disable %Eigen's own parallelization as detailed in the previous section.
+
+\warning Using OpenMP with custom scalar types that might throw exceptions can lead to unexpected behaviour in the event of throwing.
+*/
+
+}
