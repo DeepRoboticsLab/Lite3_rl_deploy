@@ -16,7 +16,7 @@
 
 #include "state_base.h"
 #include "policy_runner_base.hpp"
-#include "lite3_test_policy_runner_onnx.hpp"
+#include "lite3_test_policy_runner_onnx.h"
 
 
 

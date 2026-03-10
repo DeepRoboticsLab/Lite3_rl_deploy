@@ -127,17 +127,44 @@ if (SEND_REMOTE)
   # set(CMAKE_INSTALL_RPATH ${PATH_LIB}/libtorch/${BUILD_PLATFORM}/lib)
 endif()
 
+# ========== 快速链接器 (可选) ==========
+# Install mold with: sudo apt install mold
+# Then re-run cmake.  Falls back to system default if not found.
+option(USE_MOLD_LINKER "Use mold linker for faster linking" OFF)
+if(USE_MOLD_LINKER)
+    find_program(MOLD_EXECUTABLE mold)
+    if(MOLD_EXECUTABLE)
+        add_link_options(-fuse-ld=mold)
+        message("Using mold linker: ${MOLD_EXECUTABLE}")
+    else()
+        message(WARNING "USE_MOLD_LINKER=ON but mold not found; using default linker")
+    endif()
+endif()
+
+# ========== run_policy 独立库 ==========
+# Building the policy runner as a separate library means that editing the
+# policy implementation only recompiles this one translation unit and
+# re-links, without touching the state machine or main.cpp object files.
+add_library(run_policy STATIC run_policy/lite3_test_policy_runner_onnx.cpp)
+target_include_directories(run_policy PUBLIC
+    run_policy
+    ${THIRD_PARTY}/eigen/
+    utils
+    types
+    ${ONNX_RUNTIME_ROOT}/include
+)
+target_link_libraries(run_policy onnxruntime)
+
 # ========== 收集源文件 ==========
 file(GLOB_RECURSE STATE_MACHINE_SRC "state_machine/*.c*")
-file(GLOB_RECURSE RUN_POLICY_SRC "run_policy/*.cpp")
 
-add_executable(rl_deploy main.cpp ${STATE_MACHINE_SRC} ${RUN_POLICY_SRC})
+add_executable(rl_deploy main.cpp ${STATE_MACHINE_SRC})
 
 # ========== 链接基本库 ==========
 if(BUILD_SIM)
-    target_link_libraries(rl_deploy interface dw -lpthread -lpthread -lm -lrt -ldl -lstdc++ onnxruntime)
+    target_link_libraries(rl_deploy run_policy interface dw -lpthread -lm -lrt -ldl -lstdc++)
 else()
-    target_link_libraries(rl_deploy interface -lpthread -lm -lrt -ldl -lstdc++ onnxruntime)
+    target_link_libraries(rl_deploy run_policy interface -lpthread -lm -lrt -ldl -lstdc++)
 endif()
 
 # if (USE_ONNX)

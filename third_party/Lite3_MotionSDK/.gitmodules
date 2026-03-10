@@ -1,0 +1,3 @@
+[submodule "URDF"]
+	path = URDF
+	url = https://github.com/DeepRoboticsLab/URDF_model.git

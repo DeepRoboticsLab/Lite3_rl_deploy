@@ -170,4 +170,21 @@ A(policy_runner_base) -->B(policy_runner)
 
 This section is used to execute the output of the RL policy, new policies can be implemented by inheriting policy_runner_base.
 
+The policy runner is compiled as a **separate static library** (`librun_policy.a`). This means editing the policy only recompiles that one translation unit — the state machine and `main.cpp` object files are left untouched, making incremental rebuilds much faster.
+
+The onnxruntime C++ API headers are included only inside `run_policy/lite3_test_policy_runner_onnx.cpp` (via a PIMPL pattern). Callers only see the thin `lite3_test_policy_runner_onnx.h` header, which has no onnxruntime dependency.
+
+## Faster Linking
+
+The default GNU linker (`ld`) is single-threaded. To speed up the link step, install `mold` and enable it with a CMake flag:
+
+```bash
+sudo apt install mold
+
+# add -DUSE_MOLD_LINKER=ON to your cmake command, e.g.:
+cmake .. -DBUILD_PLATFORM=x86 -DBUILD_SIM=ON -DUSE_MOLD_LINKER=ON
+make -j
+```
+
+`mold` is a parallel linker and is typically 5–10× faster than `ld` for this project.
 
