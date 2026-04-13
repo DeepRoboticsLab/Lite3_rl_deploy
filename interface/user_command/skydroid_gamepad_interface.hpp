@@ -41,6 +41,7 @@ public:
     
     void SetMotionStateFeedback(const MotionStateFeedback& msfb){
         msfb_ = msfb;
+        usr_cmd_.target_mode = msfb.current_state;
     }
     void PrintGamepadData(SkydroidKeys *data){
         std::cout << "\nAxis value: \t";

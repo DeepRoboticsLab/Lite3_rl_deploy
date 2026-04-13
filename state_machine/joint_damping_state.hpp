@@ -29,6 +29,8 @@ public:
     virtual void OnEnter() {
         time_record_ = ri_ptr_->GetInterfaceTimeStamp();
         run_time_ = ri_ptr_->GetInterfaceTimeStamp();
+        StateBase::msfb_.UpdateCurrentState(RobotMotionState::JointDamping);
+        uc_ptr_->SetMotionStateFeedback(StateBase::msfb_);
     };
     virtual void OnExit() {
 

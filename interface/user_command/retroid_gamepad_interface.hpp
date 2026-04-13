@@ -44,6 +44,7 @@ public:
     void TransformRetroidToUserCommand();
     void SetMotionStateFeedback(const MotionStateFeedback& msfb){
         msfb_ = msfb;
+        usr_cmd_.target_mode = msfb.current_state;
     }
 
     void PrintGamepadData(RetroidKeys *data){

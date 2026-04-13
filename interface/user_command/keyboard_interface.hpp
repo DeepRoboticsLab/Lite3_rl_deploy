@@ -59,6 +59,7 @@ public:
     virtual void SetMotionStateFeedback(const MotionStateFeedback& msfb){
         // std::lock_guard<std::mutex> lock(mtx_);
         msfb_ = msfb;
+        usr_cmd_.target_mode = msfb.current_state;
     }
 
 
