@@ -20,7 +20,7 @@ from colorama import init, Fore, Style
 # Initialize colorama for colored terminal output
 init(autoreset=True)
 urdfPath = {
-"lite3":    "/../../../third_party/URDF_model/Lite3/Lite3_urdf/urdf/Lite3.urdf",
+"lite3":    "/../../../third_party/deep_robotics_model/Lite3/Lite3_urdf/urdf/Lite3.urdf",
 }
 
 initJointPos = {
