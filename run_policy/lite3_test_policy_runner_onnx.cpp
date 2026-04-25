@@ -77,16 +77,17 @@ Lite3TestPolicyRunnerONNX::Lite3TestPolicyRunnerONNX(std::string policy_name)
                           0.125f, 0.25f, 0.25f};
 
     dof_pos_default_policy.setZero(12);
-    dof_pos_default_policy << 0.0000, -0.8000, 1.6000,
-                               0.0000, -0.8000, 1.6000,
-                               0.0000, -0.8000, 1.6000,
-                               0.0000, -0.8000, 1.6000;
+    dof_pos_default_policy << 0.0000, -0.6500, 1.3000,
+                                  0.0000, -0.6500, 1.3000,
+                                  0.0000, -0.6500, 1.3000,
+                                  0.0000, -0.6500, 1.3000;
 
     dof_pos_default_robot.setZero(12);
-    dof_pos_default_robot << 0.0000, -0.8000, 1.6000,
-                              0.0000, -0.8000, 1.6000,
-                              0.0000, -0.8000, 1.6000,
-                              0.0000, -0.8000, 1.6000;
+    dof_pos_default_robot << 0.0000, -0.6500, 1.3000,
+                                  0.0000, -0.6500, 1.3000,
+                                  0.0000, -0.6500, 1.3000,
+                                  0.0000, -0.6500, 1.3000;
+
 
     kp_ = 30. * VecXf::Ones(12);
     kd_ =  1. * VecXf::Ones(12);
